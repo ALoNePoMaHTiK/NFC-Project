@@ -2,22 +2,22 @@ package com.example.nfcproject
 
 import android.os.StrictMode
 import android.util.Log
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
+import java.sql.*
+
+
 
 class DBConnection {
     private val ip = "msuniversity.ru:1450" // your database server ip
     private val db = "nfcattend" // your database name
-    private val username = "nfcattend" // your database username
+    private val username = "nfcattend"// your database username
     private val password = "nfcattend" // your database password
 
-    fun dbConn() : Connection? {
+    private fun dbConn() : Connection? {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         var conn : Connection? = null
-        var connString: String? = null
+        var connString: String?
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             connString = "jdbc:jtds:sqlserver://$ip;databaseName=$db;user=$username;password=$password;"
@@ -29,7 +29,35 @@ class DBConnection {
         }catch (ex2: Exception){
             Log.e("Error : ", ex2.message.toString())
         }
-
         return conn
+    }
+    fun readDB(query:String): ResultSet?{
+        var rs: ResultSet? = null
+        try {
+            val conn = dbConn()
+            val s: Statement = conn!!.createStatement()
+            rs = s.executeQuery(query)
+        }
+        catch (ex: Exception){
+            Log.e("Error : ", ex.message.toString())
+        }
+        finally {
+            return rs
+        }
+    }
+    fun writeDB(query:String):Int{
+        var rs: Int = 0
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            rs = s.executeUpdate(query)
+        }
+        catch (ex: Exception){
+            Log.e("Error : ", ex.message.toString())
+        }
+        finally {
+            return rs
+        }
+
     }
 }
