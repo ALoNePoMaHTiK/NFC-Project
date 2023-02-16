@@ -11,31 +11,32 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+var studNumber:String = ""
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var mainbtn:Button
-    lateinit var studNumber:EditText
+    lateinit var studNumberEditText:EditText
 
     private var nfcAdapter: NfcAdapter? = null
+
+    private var nfcTag:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_main)
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this)?.let { it }
 
         mainbtn = findViewById(R.id.fragmMainBTN)
-        studNumber = findViewById(R.id.editTextStudentNumber)
+        studNumberEditText = findViewById(R.id.editTextStudentNumber)
 
         mainbtn.setOnClickListener {
-            saveUserInputData(studNumber.text.toString())
+            saveUserInputData(studNumberEditText.text.toString())
         }
-        Log.d("NFCProjectTestDebug","Created")
 
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this)?.let { it }
-        if (intent != null) {
-            NFCHandler().processIntent(intent)
-        }
+        readNFC()
+
     }
     override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
@@ -44,8 +45,26 @@ class MainActivity : AppCompatActivity() {
             NFCHandler().processIntent(intent)
         }
     }
+
+    private fun readNFC(){
+        if (intent != null) {
+            nfcTag = NFCHandler().processIntent(intent)
+            Log.d("NFCProjectTestDebug",nfcTag+studNumber)
+            if (nfcTag != "" && studNumber != "") {
+                sendUserInputData()
+            }
+        }
+    }
+
+    private fun sendUserInputData(){
+
+        Toast.makeText(applicationContext,"Данные отправлены",Toast.LENGTH_LONG).show()
+    }
+
     private fun saveUserInputData(inputData:String){
         if(inputValidation(inputData)){
+            studNumber = inputData.uppercase()
+            Log.d("NFCProjectTestDebug","Номер студенческого: "+studNumber)
             /// запись в файл!!!!
             setContentView(R.layout.activity_main)
             Toast.makeText(applicationContext,"Данные сохранены",Toast.LENGTH_LONG).show()
