@@ -27,10 +27,6 @@ class DataSendFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MainActivity().readNFC()
+        a = 10
     }
-
-
-
-
 }
