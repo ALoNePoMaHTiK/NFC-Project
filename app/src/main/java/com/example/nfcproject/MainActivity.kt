@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nfcproject.databinding.ActivityMainBinding
 
 var studNumber:String = ""
 
@@ -22,20 +23,12 @@ class MainActivity : AppCompatActivity() {
 
     private var nfcTag:String = ""
 
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_main)
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this)?.let { it }
-
-        mainbtn = findViewById(R.id.fragmMainBTN)
-        studNumberEditText = findViewById(R.id.editTextStudentNumber)
-
-        mainbtn.setOnClickListener {
-            saveUserInputData(studNumberEditText.text.toString())
-        }
-
-        readNFC()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
     }
     override fun onNewIntent(intent: Intent?){
