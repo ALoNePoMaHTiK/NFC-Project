@@ -9,9 +9,13 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView4"
-        android:name="com.example.nfcproject.MainFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="210dp"
-        tools:layout_editor_absoluteY="255dp" />
+        tools:layout_editor_absoluteY="255dp"
+        app:navGraph="@navigation/nav_graph"
+        app:defaultNavHost="true"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

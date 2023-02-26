@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment2">
 
+    <fragment
+        android:id="@+id/mainFragment2"
+        android:name="com.example.nfcproject.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment2_to_dataSendFragment"
+            app:destination="@id/dataSendFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dataSendFragment"
+        android:name="com.example.nfcproject.DataSendFragment"
+        android:label="fragment_data_send"
+        tools:layout="@layout/fragment_data_send" />
 </navigation>
