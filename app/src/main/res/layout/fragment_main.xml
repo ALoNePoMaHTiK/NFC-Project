@@ -8,7 +8,7 @@
     tools:context=".MainFragment">
 
     <Button
-        android:id="@+id/fragmMainBTN"
+        android:id="@+id/SaveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/authBtnText"
@@ -28,7 +28,9 @@
         android:hint="@string/hintETSN"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/fragmMainBTN"
+        app:layout_constraintEnd_toStartOf="@+id/SaveButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.491" />
+        app:layout_constraintVertical_bias="0.491"
+        android:autofillHints=""
+        tools:ignore="TextFields" />
 </androidx.constraintlayout.widget.ConstraintLayout>
