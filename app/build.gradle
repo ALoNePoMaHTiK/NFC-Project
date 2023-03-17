@@ -32,12 +32,25 @@ android {
     buildFeatures {
         viewBinding true
     }
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+
+
+    def lifecycle_version = "2.2.0"
+    def fragments_version = "1.2.5"
+
+    // viewmodel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+
+    // fragments
+    implementation "androidx.fragment:fragment-ktx:$fragments_version"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation files('libs/jtds-1.2.5.jar')

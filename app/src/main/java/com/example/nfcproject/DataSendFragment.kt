@@ -8,14 +8,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.example.nfcproject.databinding.FragmentDataSendBinding
+import com.example.nfcproject.model.MainViewModel
 
 
 class DataSendFragment : Fragment() {
 
     private lateinit var binding: FragmentDataSendBinding
     private lateinit var nfcAdapter: NfcAdapter
-
+    private val sharedViewModel: MainViewModel by activityViewModels()
     private var nfcTag:String = ""
 
     override fun onCreateView(
@@ -27,6 +29,18 @@ class DataSendFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        a = 10
+        binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = sharedViewModel
+        }
+        MainActivity().readNFC()
+        sharedViewModel.studentId.value?.let { showLog("TestMVVM", it) }
     }
+    private fun showLog(tag: String, msg: String){
+        Log.d(tag, msg)
+    }
+
+
+
+
 }
