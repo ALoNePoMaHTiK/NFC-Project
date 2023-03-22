@@ -59,11 +59,11 @@ class MainViewModel : ViewModel() {
     fun setStudentLName(studentLName: String ) {
         _studentLName.value = studentLName
     }
-    fun resetData() {
+    private fun resetData() {
         _studentId.value = ""
         _auditoryId.value = ""
         _studentFName.value = ""
         _studentLName.value = ""
-        _stateFNC.value = false
+        offNFC()
     }
 }

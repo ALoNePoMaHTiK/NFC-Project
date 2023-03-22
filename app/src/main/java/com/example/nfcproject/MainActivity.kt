@@ -10,9 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import com.example.nfcproject.databinding.ActivityMainBinding
 import com.example.nfcproject.model.MainViewModel
-
-var studNumber:String = ""
-
+import java.sql.ResultSet
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,8 +40,8 @@ class MainActivity : AppCompatActivity() {
         if (intent != null) {
             sendUserInputData()
             nfcTag = NFCHandler().processIntent(intent)
-            Log.d("NFCProjectTestDebug",nfcTag+studNumber)
-            if (nfcTag != "" && studNumber != "") {
+            Log.d("NFCProjectTestDebug",nfcTag+sharedViewModel.studentId.value)
+            if (nfcTag != "" && sharedViewModel.studentId.value != "") {
                 sendUserInputData()
             }
         }
@@ -56,8 +54,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveUserInputData(inputData:String){
         if(inputValidation(inputData)){
-            studNumber = inputData.uppercase()
-            Log.d("NFCProjectTestDebug","Номер студенческого: "+studNumber)
+            sharedViewModel.setStudentId(inputData.uppercase())
+            Log.d("NFCProjectTestDebug","Номер студенческого: "+sharedViewModel.studentId.value)
             /// запись в файл!!!!
             Toast.makeText(applicationContext,"Данные сохранены",Toast.LENGTH_LONG).show()
         }

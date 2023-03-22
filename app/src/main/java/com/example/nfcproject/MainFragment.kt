@@ -30,10 +30,10 @@ class MainFragment : Fragment() {
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
         }
-        binding.SaveButton.setOnClickListener {saveButtonHendler()}
+        binding.SaveButton.setOnClickListener {saveButtonHandler()}
 
     }
-    private fun saveButtonHendler(){
+    private fun saveButtonHandler(){
         if(inputValidation(binding.studentId.text.toString())) {
             sendDataViewModel()
             findNavController().navigate(R.id.action_mainFragment2_to_dataSendFragment)
@@ -42,8 +42,8 @@ class MainFragment : Fragment() {
     }
     private fun saveUserInputData(inputData:String){
         if(inputValidation(inputData)){
-            studNumber = inputData.uppercase()
-            Log.d("NFCProjectTestDebug","Номер студенческого: "+studNumber)
+            sharedViewModel.setStudentId(inputData.uppercase())
+            Log.d("NFCProjectTestDebug","Номер студенческого: "+sharedViewModel.studentId)
             /// запись в файл!!!!
             showMessage("Данные сохранены")
         }
