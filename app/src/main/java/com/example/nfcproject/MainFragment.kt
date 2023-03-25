@@ -1,5 +1,6 @@
 package com.example.nfcproject
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -69,5 +70,16 @@ class MainFragment : Fragment() {
     }
     private fun showLog(tag: String, msg: String){
         Log.d(tag, msg)
+    }
+
+    fun getAuth(){
+        if (UserDataStorage(context as Context).contains(UserDataStorage.Prefs.USER_CARD_ID)){
+            sharedViewModel.setStudentId(UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_CARD_ID))
+            sharedViewModel.setStudentFName(UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_LOGIN))
+            sharedViewModel.setStudentLName(UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_PASSWORD))
+        }
+        else{
+            sendDataViewModel()
+        }
     }
 }

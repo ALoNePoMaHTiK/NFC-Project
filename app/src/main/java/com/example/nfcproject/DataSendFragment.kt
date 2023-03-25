@@ -66,17 +66,6 @@ class DataSendFragment : Fragment() {
         Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
     }
 
-    fun checkAuth():Boolean{
-        var prefs = context?.getSharedPreferences("UserData", Context.MODE_PRIVATE) as SharedPreferences
-        if(prefs.contains("UserCardId") && prefs.contains("UserLogin") && prefs.contains("UserPassword")) {
-            sharedViewModel.setStudentId(prefs.getString("UserCardId",null).toString())
-            sharedViewModel.setStudentFName(prefs.getString("UserLogin",null).toString())
-            sharedViewModel.setStudentLName(prefs.getString("UserPassword",null).toString())
-            return true
-        }
-        return false
-    }
-
     private fun showLog(tag: String, msg: String){
         Log.d(tag, msg)
     }
