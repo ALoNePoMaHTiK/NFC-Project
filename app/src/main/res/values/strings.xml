@@ -5,7 +5,7 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="authBtnText">Войти</string>
-    <string name="hintETSN">Нумер студенческого билета</string>
+    <string name="hintETSN">Номер студенческого билета</string>
     <string name="lNameHint">Фамилия</string>
     <string name="fNameHint">Имя</string>
     <string name="helloText">Добро пожаловать</string>
