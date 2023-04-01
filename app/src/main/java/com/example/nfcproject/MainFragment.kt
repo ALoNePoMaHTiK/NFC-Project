@@ -30,35 +30,8 @@ class MainFragment : Fragment() {
             viewModel = sharedViewModel
         }
         sharedViewModel.studentId.value?.let { showLog("TestMVVM", it) }
-        checkCredentials(sharedViewModel.studentId.value.toString(),sharedViewModel.studentFName.value.toString(),sharedViewModel.studentLName.value.toString())
         MainActivity().readNFC()
 
-    }
-
-    fun checkCredentials(StudentId:String,StudentFName:String,StudentLName:String){
-        var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword,Sault FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
-        var LoginHash = ""
-        var PasswordHash = ""
-        var Sault = ""
-        while (rs.next()) {
-            LoginHash = rs.getString(1)
-            PasswordHash = rs.getString(2)
-            Sault = rs.getString(3)
-        }
-        var UserLogin = ""
-        rs = DBConnection().readDB(String.format("EXEC DoubleHash '%s','%s'",Sault,StudentFName)) as ResultSet
-        while (rs.next()) {
-            UserLogin = rs.getString(1)
-        }
-        var UserPassword = ""
-        rs = DBConnection().readDB(String.format("EXEC DoubleHash '%s','%s'",Sault,StudentLName)) as ResultSet
-        while (rs.next()) {
-            UserPassword = rs.getString(1)
-        }
-        Log.d("NFCProjectTestDebug","Полученный hash логина: "+UserLogin)
-        Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)
-        Log.d("NFCProjectTestDebug","Полученный hash логина: "+UserPassword)
-        Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
     }
 
     private fun showLog(tag: String, msg: String){
