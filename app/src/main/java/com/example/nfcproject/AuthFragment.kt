@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.databinding.FragmentAuthBinding
@@ -34,20 +35,28 @@ class AuthFragment : Fragment() {
         }
         binding.SaveButton.setOnClickListener {saveButtonHandler()}
 
+
     }
     private fun saveButtonHandler(){
-        if(inputValidation(binding.studentId.text.toString())) {
+        val studentId = binding.studentId.text.toString()
+        val fName = binding.fName.text.toString()
+        val lName = binding.lName.text.toString()
+
+        if(inputValidation(studentId, fName, lName)) {
             saveDataToDB()
             sendDataViewModel()
             savePreferences()
             findNavController().navigate(R.id.action_authFragment_to_mainFragment)
-        }
+       }
 
     }
     //TODO Добавить валидацию для остальных полей
-    private fun inputValidation(inputData:String): Boolean{
+    private fun inputValidation(studentId:String, fName:String, lName:String): Boolean{
         val countСharacter = 7
-        return if(countСharacter == inputData.length) {
+        val fNameRegex = """[а-яА-Я]{3,15}""".toRegex()
+        val lNameRegex = """[а-яА-Я]{2,15}""".toRegex()
+        val studentIdRegex = """\d{2}[а-яА-Я]\d{4}""".toRegex()
+        return if(studentIdRegex.matches(studentId) && fNameRegex.matches(fName) && lNameRegex.matches(lName)) {
             true
         }
         else {

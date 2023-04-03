@@ -19,7 +19,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/fNameHint"
-            android:inputType="textPersonName"
+            android:inputType="text"
             android:minHeight="48dp"
             app:layout_constraintBottom_toTopOf="@+id/lName"
             app:layout_constraintEnd_toEndOf="parent"
