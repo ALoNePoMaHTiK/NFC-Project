@@ -43,10 +43,11 @@ class AuthFragment : Fragment() {
         val lName = binding.lName.text.toString()
 
         if(inputValidation(studentId, fName, lName)) {
-            saveDataToDB()
-            sendDataViewModel()
-            savePreferences()
-            findNavController().navigate(R.id.action_authFragment_to_mainFragment)
+            if(saveDataToDB()){
+                sendDataViewModel()
+                savePreferences()
+                findNavController().navigate(R.id.action_authFragment_to_mainFragment)
+            }
        }
 
     }
@@ -60,7 +61,10 @@ class AuthFragment : Fragment() {
             true
         }
         else {
-            showMessage("Номер студенческого билета введен некоректно")
+            if (fNameRegex.matches(fName) || lNameRegex.matches(lName))
+                showMessage("Фамилия или Имя введены некоректно")
+            else
+                showMessage("Номер студенческого билета введен некоректно")
             false
         }
     }
@@ -74,14 +78,16 @@ class AuthFragment : Fragment() {
         //Значит такой пользователь уже есть
         if (rs.next()){
             if (checkCredentials(StudentId,StudentFName,StudentLName)){
-                DBConnection().writeDB(String.format("INSERT INTO Students(StudentId,StudentLogin,StudentPassword) VALUES ('%s','%s','%s');",StudentId,StudentFName,StudentLName))
+                DBConnection().writeDB(String.format("INSERT INTO Students(StudentCardId,StudentLogin,StudentPassword) VALUES ('%s','%s','%s');",StudentId,StudentFName,StudentLName))
+                return true
             }
             else{
                 showMessage("Неверные имя и фамилия!")
                 return false
             }
         }
-        DBConnection().writeDB(String.format("INSERT INTO Students(StudentId,StudentLogin,StudentPassword) VALUES ('%s','%s','%s');",StudentId,StudentFName,StudentLName))
+        else
+            DBConnection().writeDB(String.format("INSERT INTO Students(StudentCardId,StudentLogin,StudentPassword) VALUES ('%s','%s','%s');",StudentId,StudentFName,StudentLName))
         return true
     }
 
@@ -93,9 +99,12 @@ class AuthFragment : Fragment() {
     }
 
     private fun savePreferences(){
+        val studentSault = DBConnection().getSault(sharedViewModel.studentId.value.toString())
+        val studentLoginHash = DBConnection().getHash(studentSault+sharedViewModel.studentFName.value.toString())
+        val studentPasswordHash = DBConnection().getHash(studentSault+sharedViewModel.studentLName.value.toString())
         UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_CARD_ID,sharedViewModel.studentId.value.toString())
-        UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_LOGIN,sharedViewModel.studentFName.value.toString())
-        UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_PASSWORD,sharedViewModel.studentLName.value.toString())
+        UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_LOGIN,studentLoginHash)
+        UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_PASSWORD,studentPasswordHash)
     }
 
     private fun checkCredentials(StudentId:String,StudentFName:String,StudentLName:String):Boolean{

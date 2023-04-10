@@ -30,6 +30,7 @@ class UserDataStorage(context: Context) {
         val prefs = getSharedPrefs()
         val prefsEdit = prefs.edit()
         prefsEdit.putString(pref.text,data)
+        prefsEdit.commit()
     }
 
     fun contains(pref:Prefs):Boolean{

@@ -29,7 +29,7 @@ class StartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        goToAuthFragment()
+        getAuth()
     }
     fun goToAuthFragment(){
         findNavController().navigate(R.id.action_startFragment_to_authFragment)
@@ -42,7 +42,7 @@ class StartFragment : Fragment() {
         if (UserDataStorage(context as Context).contains(UserDataStorage.Prefs.USER_CARD_ID)){
             val StudentId = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_CARD_ID)
             val StudentFName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_LOGIN)
-            val StudentLName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_CARD_ID)
+            val StudentLName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_PASSWORD)
             if (checkCredentials(StudentId,StudentFName,StudentLName)) {
                 sharedViewModel.setStudentId(StudentId)
                 sharedViewModel.setStudentFName(StudentFName)
@@ -65,7 +65,17 @@ class StartFragment : Fragment() {
             LoginHash = rs.getString(1)
             PasswordHash = rs.getString(2)
         }
+        //TODO Исправить сравнение
+        // Хэш сохраняется нормально, но проблемы с кодировкой
+        //? != �
         if (LoginHash != ""){
+            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentLoginHash)
+            Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)
+            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentLoginHash==LoginHash))
+
+            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentPasswordHash)
+            Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
+            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentPasswordHash==PasswordHash))
             if (LoginHash == StudentLoginHash && PasswordHash == StudentPasswordHash)
                 return true
         }

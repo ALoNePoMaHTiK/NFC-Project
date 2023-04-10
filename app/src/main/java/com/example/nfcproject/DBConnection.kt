@@ -45,19 +45,69 @@ class DBConnection {
             return rs
         }
     }
-    fun writeDB(query:String):Int{
-        var rs: Int = 0
+    fun writeDB(query:String):Boolean{
         try {
             val conn = DBConnection().dbConn()
             val s: Statement = conn!!.createStatement()
-            rs = s.executeUpdate(query)
+            var result = s.executeUpdate(query)
+            return true
         }
         catch (ex: Exception){
-            Log.e("Error : ", ex.message.toString())
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+            return false
         }
-        finally {
-            return rs
-        }
+    }
 
+    //?Получение Логина и Пароля студента по номеру студенческого
+    fun getStudentCredentials(StudentCardId:String):List<String>{
+        var StudentLogin = ""
+        var StudentPassword = ""
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            var rs = s.executeQuery(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentCardId))
+            while (rs.next()){
+                StudentLogin = rs.getString(1)
+                StudentPassword = rs.getString(2)
+            }
+        }
+        catch (ex: Exception){
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+        }
+        return listOf(StudentLogin,StudentPassword)
+    }
+
+    //?Получение соли для хашей студента по номеру студенческого
+    fun getSault(StudentCardId:String):String{
+        var result = ""
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            var rs = s.executeQuery(String.format("SELECT Sault FROM Students WHERE StudentCardId = '%s';",StudentCardId))
+            while (rs.next()){
+                result = rs.getString(1)
+            }
+        }
+        catch (ex: Exception){
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+        }
+        return result
+    }
+
+    //?Получение хэша сообщения
+    fun getHash(text:String):String{
+        var result = ""
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            var rs = s.executeQuery(String.format("EXEC DoubleHash '%s';",text))
+            while (rs.next()){
+                result = rs.getString(1)
+            }
+        }
+        catch (ex: Exception){
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+        }
+        return result
     }
 }
