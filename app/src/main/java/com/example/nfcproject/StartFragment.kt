@@ -62,12 +62,9 @@ class StartFragment : Fragment() {
         var LoginHash = ""
         var PasswordHash = ""
         while (rs.next()) {
-            LoginHash = rs.getString(1)
-            PasswordHash = rs.getString(2)
+            LoginHash = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
+            PasswordHash = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
         }
-        //TODO Исправить сравнение
-        // Хэш сохраняется нормально, но проблемы с кодировкой
-        //? != �
         if (LoginHash != ""){
             Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentLoginHash)
             Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)

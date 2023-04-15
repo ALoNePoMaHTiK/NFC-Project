@@ -2,6 +2,7 @@ package com.example.nfcproject
 
 import android.os.StrictMode
 import android.util.Log
+import java.nio.charset.Charset
 import java.sql.*
 
 
@@ -102,7 +103,7 @@ class DBConnection {
             val s: Statement = conn!!.createStatement()
             var rs = s.executeQuery(String.format("EXEC DoubleHash '%s';",text))
             while (rs.next()){
-                result = rs.getString(1)
+                result = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
             }
         }
         catch (ex: Exception){

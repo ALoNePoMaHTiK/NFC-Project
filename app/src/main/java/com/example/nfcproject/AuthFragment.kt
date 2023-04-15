@@ -51,7 +51,6 @@ class AuthFragment : Fragment() {
        }
 
     }
-    //TODO Добавить валидацию для остальных полей
     private fun inputValidation(studentId:String, fName:String, lName:String): Boolean{
         val countСharacter = 7
         val fNameRegex = """[а-яА-Я]{3,15}""".toRegex()
@@ -71,14 +70,13 @@ class AuthFragment : Fragment() {
 
 
     private fun saveDataToDB():Boolean{
-        var StudentId =binding.studentId.text.toString()
+        var StudentId = binding.studentId.text.toString()
         var StudentFName = binding.fName.text.toString()
         var StudentLName = binding.lName.text.toString()
         var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
         //Значит такой пользователь уже есть
         if (rs.next()){
             if (checkCredentials(StudentId,StudentFName,StudentLName)){
-                DBConnection().writeDB(String.format("INSERT INTO Students(StudentCardId,StudentLogin,StudentPassword) VALUES ('%s','%s','%s');",StudentId,StudentFName,StudentLName))
                 return true
             }
             else{
@@ -109,30 +107,24 @@ class AuthFragment : Fragment() {
 
     private fun checkCredentials(StudentId:String,StudentFName:String,StudentLName:String):Boolean{
         var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword,Sault FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
-        var LoginHash = ""
-        var PasswordHash = ""
+        var DBLoginHash = ""
+        var DBPasswordHash = ""
         var Sault = ""
         while (rs.next()) {
-            LoginHash = rs.getString(1)
-            PasswordHash = rs.getString(2)
+            DBLoginHash = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
+            DBPasswordHash = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
             Sault = rs.getString(3)
         }
-        var UserLogin = ""
-        rs = DBConnection().readDB(String.format("EXEC DoubleHash '%s','%s'",Sault,StudentFName)) as ResultSet
-        while (rs.next()) {
-            UserLogin = rs.getString(1)
-        }
-        var UserPassword = ""
-        rs = DBConnection().readDB(String.format("EXEC DoubleHash '%s','%s'",Sault,StudentLName)) as ResultSet
-        while (rs.next()) {
-            UserPassword = rs.getString(1)
-        }
-        Log.d("NFCProjectTestDebug","Полученный hash логина: "+UserLogin)
-        Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)
-        Log.d("NFCProjectTestDebug","Полученный hash логина: "+UserPassword)
-        Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
+        var StudentLoginHash = DBConnection().getHash(Sault+StudentFName)
+        var StudentPasswordHash = DBConnection().getHash(Sault+StudentLName)
+        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBLoginHash)
+        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentLoginHash)
+        Log.d("NFCProjectTestDebug","Сравнение "+(DBLoginHash==StudentLoginHash))
+        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBPasswordHash)
+        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentPasswordHash)
+        Log.d("NFCProjectTestDebug","Сравнение "+(DBPasswordHash==StudentPasswordHash))
 
-        if (UserLogin==LoginHash && UserPassword == PasswordHash){
+        if (DBLoginHash==StudentLoginHash && DBPasswordHash == StudentPasswordHash){
             return true
         }
         return false
