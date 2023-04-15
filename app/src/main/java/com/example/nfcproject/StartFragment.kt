@@ -66,13 +66,13 @@ class StartFragment : Fragment() {
             PasswordHash = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
         }
         if (LoginHash != ""){
-            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentLoginHash)
-            Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)
-            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentLoginHash==LoginHash))
-
-            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentPasswordHash)
-            Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
-            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentPasswordHash==PasswordHash))
+//            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentLoginHash)
+//            Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)
+//            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentLoginHash==LoginHash))
+//
+//            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentPasswordHash)
+//            Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
+//            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentPasswordHash==PasswordHash))
             if (LoginHash == StudentLoginHash && PasswordHash == StudentPasswordHash)
                 return true
         }

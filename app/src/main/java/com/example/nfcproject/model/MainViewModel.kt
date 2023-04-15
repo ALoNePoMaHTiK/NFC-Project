@@ -22,8 +22,8 @@ class MainViewModel : ViewModel() {
     private val _studentFName = MutableLiveData<String>()
     val studentFName: LiveData<String> = _studentFName
 
-    private val _stateFNC = MutableLiveData<Boolean>()
-    val stateFNC: LiveData<Boolean> = _stateFNC
+    private val _stateNFC = MutableLiveData<Boolean>()
+    val stateNFC: LiveData<Boolean> = _stateNFC
     init {
         resetData()
     }
@@ -54,7 +54,7 @@ class MainViewModel : ViewModel() {
         setStateNFC(false)
     }
     private fun setStateNFC(state: Boolean){
-        _stateFNC.value = state
+        _stateNFC.value = state
     }
     fun setStudentLName(studentLName: String ) {
         _studentLName.value = studentLName
@@ -64,6 +64,7 @@ class MainViewModel : ViewModel() {
         _auditoryId.value = ""
         _studentFName.value = ""
         _studentLName.value = ""
-        offNFC()
+        onNFC()
+        //TODO добавить определение включенность NFC службы
     }
 }

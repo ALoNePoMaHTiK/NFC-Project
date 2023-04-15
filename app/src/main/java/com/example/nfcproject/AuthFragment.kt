@@ -117,12 +117,12 @@ class AuthFragment : Fragment() {
         }
         var StudentLoginHash = DBConnection().getHash(Sault+StudentFName)
         var StudentPasswordHash = DBConnection().getHash(Sault+StudentLName)
-        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBLoginHash)
-        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentLoginHash)
-        Log.d("NFCProjectTestDebug","Сравнение "+(DBLoginHash==StudentLoginHash))
-        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBPasswordHash)
-        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentPasswordHash)
-        Log.d("NFCProjectTestDebug","Сравнение "+(DBPasswordHash==StudentPasswordHash))
+//        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBLoginHash)
+//        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentLoginHash)
+//        Log.d("NFCProjectTestDebug","Сравнение "+(DBLoginHash==StudentLoginHash))
+//        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBPasswordHash)
+//        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentPasswordHash)
+//        Log.d("NFCProjectTestDebug","Сравнение "+(DBPasswordHash==StudentPasswordHash))
 
         if (DBLoginHash==StudentLoginHash && DBPasswordHash == StudentPasswordHash){
             return true

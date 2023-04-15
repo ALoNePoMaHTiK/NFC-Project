@@ -8,12 +8,12 @@ import android.util.Log
 
 class NFCHandler {
      fun processIntent(checkIntent: Intent):String {
-        Log.d("NFCProjectTestDebug","processIntent")
         var result = ""
         if (checkIntent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
             val rawMessages = checkIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
             if (rawMessages != null) {
-                Log.d("NFCProjectTestDebug",rawMessages.size.toString())
+                var t = checkIntent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase()
+                Log.d("NFCProjectTestDebug","Серийный номер "+t)
                 val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
                 for (i in rawMessages.indices) {
                     messages[i] = rawMessages[i] as NdefMessage;

@@ -59,6 +59,37 @@ class DBConnection {
         }
     }
 
+    //TODO Доделать
+    fun postStudentCheckout(StudentCardId: String, TagId:String):Boolean{
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            var result = s.executeUpdate(String.format("INSERT INTO StudentCheckouts(StudentId,TagId) VALUES ('%s','%s')",))
+            return true
+        }
+        catch (ex: Exception){
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+            return false
+        }
+    }
+
+    //Получение NFC метки по серийному номеру
+    fun getNFCTag(SerialNumber:String):String{
+        var NFCTag = ""
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            var rs = s.executeQuery(String.format("SELECT NFCTagId FROM NFCTags WHERE SerialNumber = '%s';",SerialNumber))
+            while (rs.next()){
+                NFCTag = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
+            }
+        }
+        catch (ex: Exception){
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+        }
+        return NFCTag
+    }
+
     //?Получение Логина и Пароля студента по номеру студенческого
     fun getStudentCredentials(StudentCardId:String):List<String>{
         var StudentLogin = ""
@@ -68,8 +99,8 @@ class DBConnection {
             val s: Statement = conn!!.createStatement()
             var rs = s.executeQuery(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentCardId))
             while (rs.next()){
-                StudentLogin = rs.getString(1)
-                StudentPassword = rs.getString(2)
+                StudentLogin = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
+                StudentPassword = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
             }
         }
         catch (ex: Exception){

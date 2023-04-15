@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
         Log.d("NFCProjectTestDebug","New Intent")
-        if (intent != null && sharedViewModel.stateFNC.value == true) {
+        if (intent != null && sharedViewModel.stateNFC.value == true) {
             NFCHandler().processIntent(intent)
         }
     }
