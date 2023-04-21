@@ -44,7 +44,7 @@
                 android:id="@+id/studentIdLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.studentId}"
+                android:text="@{viewModel.studentCardId}"
                 android:textSize="20sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

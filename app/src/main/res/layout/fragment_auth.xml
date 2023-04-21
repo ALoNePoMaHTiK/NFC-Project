@@ -37,14 +37,14 @@
             android:hint="@string/lNameHint"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@+id/studentId"
+            app:layout_constraintBottom_toTopOf="@+id/studentCardId"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints" />
 
         <EditText
-            android:id="@+id/studentId"
+            android:id="@+id/studentCardId"
             android:layout_width="210dp"
             android:layout_height="50dp"
             android:autofillHints=""

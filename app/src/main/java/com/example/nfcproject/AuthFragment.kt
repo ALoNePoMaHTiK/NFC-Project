@@ -2,13 +2,11 @@ package com.example.nfcproject
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.databinding.FragmentAuthBinding
@@ -38,7 +36,7 @@ class AuthFragment : Fragment() {
 
     }
     private fun saveButtonHandler(){
-        val studentId = binding.studentId.text.toString()
+        val studentId = binding.studentCardId.text.toString()
         val fName = binding.fName.text.toString()
         val lName = binding.lName.text.toString()
 
@@ -52,7 +50,6 @@ class AuthFragment : Fragment() {
 
     }
     private fun inputValidation(studentId:String, fName:String, lName:String): Boolean{
-        val countСharacter = 7
         val fNameRegex = """[а-яА-Я]{3,15}""".toRegex()
         val lNameRegex = """[а-яА-Я]{2,15}""".toRegex()
         val studentIdRegex = """\d{2}[а-яА-Я]\d{4}""".toRegex()
@@ -70,10 +67,10 @@ class AuthFragment : Fragment() {
 
 
     private fun saveDataToDB():Boolean{
-        var StudentId = binding.studentId.text.toString()
-        var StudentFName = binding.fName.text.toString()
-        var StudentLName = binding.lName.text.toString()
-        var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
+        val StudentId = binding.studentCardId.text.toString()
+        val StudentFName = binding.fName.text.toString()
+        val StudentLName = binding.lName.text.toString()
+        val rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
         //Значит такой пользователь уже есть
         if (rs.next()){
             if (checkCredentials(StudentId,StudentFName,StudentLName)){
@@ -90,7 +87,7 @@ class AuthFragment : Fragment() {
     }
 
     private fun sendDataViewModel() {
-        sharedViewModel.setStudentCardId(binding.studentId.text.toString())
+        sharedViewModel.setStudentCardId(binding.studentCardId.text.toString())
         sharedViewModel.setStudentFName(binding.fName.text.toString())
         sharedViewModel.setStudentLName(binding.lName.text.toString())
         sharedViewModel.onNFC()
@@ -106,17 +103,17 @@ class AuthFragment : Fragment() {
     }
 
     private fun checkCredentials(StudentId:String,StudentFName:String,StudentLName:String):Boolean{
-        var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword,Salt FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
+        val rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword,Salt FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
         var DBLoginHash = ""
         var DBPasswordHash = ""
-        var Sault = ""
+        var Salt = ""
         while (rs.next()) {
             DBLoginHash = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
             DBPasswordHash = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
-            Sault = rs.getString(3)
+            Salt = rs.getString(3)
         }
-        var StudentLoginHash = DBConnection().getHash(Sault+StudentFName)
-        var StudentPasswordHash = DBConnection().getHash(Sault+StudentLName)
+        val StudentLoginHash = DBConnection().getHash(Salt+StudentFName)
+        val StudentPasswordHash = DBConnection().getHash(Salt+StudentLName)
         if (DBLoginHash==StudentLoginHash && DBPasswordHash == StudentPasswordHash){
             return true
         }
