@@ -35,7 +35,5 @@ class MainFragment : Fragment() {
     }
 
     //TODO Добавить считывание метки и запрос к БД (Серийник+НомерАудитории)
-    private fun showLog(tag: String, msg: String){
-        Log.d(tag, msg)
-    }
+    private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
 }

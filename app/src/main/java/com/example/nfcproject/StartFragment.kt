@@ -2,7 +2,6 @@ package com.example.nfcproject
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.databinding.FragmentStartBinding
 import com.example.nfcproject.model.MainViewModel
-import java.sql.ResultSet
 
 
 class StartFragment : Fragment() {
@@ -31,10 +29,10 @@ class StartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         getAuth()
     }
-    fun goToAuthFragment(){
+    private fun goToAuthFragment(){
         findNavController().navigate(R.id.action_startFragment_to_authFragment)
     }
-    fun goToMainFragment(){
+    private fun goToMainFragment(){
         findNavController().navigate(R.id.action_startFragment_to_mainFragment)
     }
 
@@ -47,6 +45,7 @@ class StartFragment : Fragment() {
                 sharedViewModel.setStudentCardId(StudentCardId)
                 sharedViewModel.setStudentFName(StudentFName)
                 sharedViewModel.setStudentLName(StudentLName)
+                sharedViewModel.onNFC()
                 goToMainFragment()
             }
             else{
@@ -57,18 +56,8 @@ class StartFragment : Fragment() {
             goToAuthFragment()
         }
     }
-    private fun checkCredentials(StudentId:String,StudentLoginHash:String,StudentPasswordHash:String):Boolean{
-        var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
-        var LoginHash = ""
-        var PasswordHash = ""
-        while (rs.next()) {
-            LoginHash = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
-            PasswordHash = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
-        }
-        if (LoginHash != ""){
-            if (LoginHash == StudentLoginHash && PasswordHash == StudentPasswordHash)
-                return true
-        }
-        return false
+    private fun checkCredentials(StudentId: String, StudentLoginHash: String, StudentPasswordHash: String): Boolean{
+        val credential = DBConnection().getStudentCredentials(StudentId)
+        return (credential[0] != "" && credential[0] == StudentLoginHash && credential[1] == StudentPasswordHash)
     }
 }

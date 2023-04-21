@@ -32,7 +32,7 @@ class DBConnection {
         }
         return conn
     }
-    fun readDB(query:String): ResultSet?{
+    private fun readDB(query:String): ResultSet?{
         var rs: ResultSet? = null
         try {
             val conn = dbConn()
@@ -46,32 +46,59 @@ class DBConnection {
             return rs
         }
     }
-    fun writeDB(query:String):Boolean{
-        try {
+    private fun writeDB (query:String):Boolean{
+        return try {
             val conn = DBConnection().dbConn()
             val s: Statement = conn!!.createStatement()
-            var result = s.executeUpdate(query)
-            return true
-        }
-        catch (ex: Exception){
+            s.executeUpdate(query)
+            true
+        } catch (ex: Exception){
             Log.e("NFCProjectTestDebug : ", ex.message.toString())
-            return false
+            false
         }
+    }
+
+    /**
+     * Функция для поиска студента по его ID
+     * @param StudentId id студента типа String
+     * @return ResultSet (login and Pass)
+     */
+    fun searchStudentByCardId(StudentCardId: String): ResultSet {
+        return readDB(
+            String.format(
+                "SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",
+                StudentCardId
+            )
+        ) as ResultSet
+    }
+    /**
+     * Функция для добавления нового студента
+     * @param StudentId id студента типа String
+     * @param StudentFName имя студента
+     * @param StudentLName фамилия студента
+     *
+     */
+    fun addNewStudent(StudentCardId: String,StudentFName: String, StudentLName: String){
+        writeDB(
+            String.format(
+                "INSERT INTO Students(StudentCardId,StudentLogin,StudentPassword) VALUES ('%s','%s','%s');",
+                StudentCardId,
+                StudentFName,
+                StudentLName
+            )
+        )
     }
 
     //Получение StudentId по StudentCardId
     fun getStudentId(StudentCardId:String):String{
         var StudentId = ""
         try {
-            val conn = DBConnection().dbConn()
-            val s: Statement = conn!!.createStatement()
-            var rs = s.executeQuery(String.format("SELECT StudentId FROM Students WHERE StudentCardId = '%s';",StudentCardId))
-            while (rs.next()){
+            val rs = readDB(String.format("SELECT StudentId FROM Students WHERE StudentCardId = '%s';", StudentCardId)) as ResultSet
+            while (rs.next())
                 StudentId = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
-            }
         }
         catch (ex: Exception){
-            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+            Log.e("NFCProjectTestDebug: ", ex.message.toString())
         }
         return StudentId
     }
@@ -79,25 +106,20 @@ class DBConnection {
 
     //TODO Доделать
     fun postStudentCheckout(StudentId: String, NFCTagId:String):Boolean{
-        try {
-            val conn = DBConnection().dbConn()
-            val s: Statement = conn!!.createStatement()
-            var result = s.executeUpdate(String.format("INSERT INTO StudentCheckouts(StudentId,NFCTagId) VALUES ('%s','%s')",))
-            return true
-        }
-        catch (ex: Exception){
+        return try {
+            val result = writeDB(String.format("INSERT INTO StudentCheckouts(StudentId,NFCTagId) VALUES ('%s','%s')",StudentId, NFCTagId))
+            true
+        } catch (ex: Exception){
             Log.e("NFCProjectTestDebug : ", ex.message.toString())
-            return false
+            false
         }
     }
 
     //Получение NFC метки по серийному номеру
-    fun getNFCTag(SerialNumber:String):String{
+    fun getNFCTag(SerialNumber: String): String{
         var NFCTag = ""
         try {
-            val conn = DBConnection().dbConn()
-            val s: Statement = conn!!.createStatement()
-            var rs = s.executeQuery(String.format("SELECT NFCTagId FROM NFCTags WHERE SerialNumber = '%s';",SerialNumber))
+            val rs = readDB(String.format("SELECT NFCTagId FROM NFCTags WHERE SerialNumber = '%s';", SerialNumber)) as ResultSet
             while (rs.next()){
                 NFCTag = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
             }
@@ -109,31 +131,29 @@ class DBConnection {
     }
 
     //?Получение Логина и Пароля студента по номеру студенческого
-    fun getStudentCredentials(StudentCardId:String):List<String>{
+    fun getStudentCredentials(StudentCardId: String):List<String>{
         var StudentLogin = ""
         var StudentPassword = ""
+        var Salt = ""
         try {
-            val conn = DBConnection().dbConn()
-            val s: Statement = conn!!.createStatement()
-            var rs = s.executeQuery(String.format("SELECT StudentLogin,StudentPassword FROM Students WHERE StudentCardId = '%s';",StudentCardId))
+            val rs = readDB(String.format("SELECT StudentLogin, StudentPassword, Salt FROM Students WHERE StudentCardId = '%s';", StudentCardId)) as ResultSet
             while (rs.next()){
                 StudentLogin = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
                 StudentPassword = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
+                Salt = rs.getString(3)
             }
         }
         catch (ex: Exception){
             Log.e("NFCProjectTestDebug : ", ex.message.toString())
         }
-        return listOf(StudentLogin,StudentPassword)
+        return listOf(StudentLogin, StudentPassword, Salt)
     }
 
     //?Получение соли для хашей студента по номеру студенческого
     fun getSault(StudentCardId:String):String{
         var result = ""
         try {
-            val conn = DBConnection().dbConn()
-            val s: Statement = conn!!.createStatement()
-            var rs = s.executeQuery(String.format("SELECT Salt FROM Students WHERE StudentCardId = '%s';",StudentCardId))
+            val rs = readDB(String.format("SELECT Salt FROM Students WHERE StudentCardId = '%s';", StudentCardId)) as ResultSet
             while (rs.next()){
                 result = rs.getString(1)
             }
@@ -148,9 +168,7 @@ class DBConnection {
     fun getHash(text:String):String{
         var result = ""
         try {
-            val conn = DBConnection().dbConn()
-            val s: Statement = conn!!.createStatement()
-            var rs = s.executeQuery(String.format("EXEC DoubleHash '%s';",text))
+            val rs = readDB(String.format("EXEC DoubleHash '%s';", text)) as ResultSet
             while (rs.next()){
                 result = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
             }

@@ -64,7 +64,7 @@ class MainViewModel : ViewModel() {
         _auditoryId.value = ""
         _studentFName.value = ""
         _studentLName.value = ""
-        onNFC()
+        offNFC()
         //TODO добавить определение включенность NFC службы
     }
 }
