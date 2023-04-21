@@ -40,11 +40,11 @@ class StartFragment : Fragment() {
 
     private fun getAuth(){
         if (UserDataStorage(context as Context).contains(UserDataStorage.Prefs.USER_CARD_ID)){
-            val StudentId = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_CARD_ID)
+            val StudentCardId = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_CARD_ID)
             val StudentFName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_LOGIN)
             val StudentLName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_PASSWORD)
-            if (checkCredentials(StudentId,StudentFName,StudentLName)) {
-                sharedViewModel.setStudentId(StudentId)
+            if (checkCredentials(StudentCardId,StudentFName,StudentLName)) {
+                sharedViewModel.setStudentCardId(StudentCardId)
                 sharedViewModel.setStudentFName(StudentFName)
                 sharedViewModel.setStudentLName(StudentLName)
                 goToMainFragment()
@@ -66,13 +66,6 @@ class StartFragment : Fragment() {
             PasswordHash = rs.getString(2).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
         }
         if (LoginHash != ""){
-//            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentLoginHash)
-//            Log.d("NFCProjectTestDebug","Правильный hash логина: "+LoginHash)
-//            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentLoginHash==LoginHash))
-//
-//            Log.d("NFCProjectTestDebug","Полученный hash логина: "+StudentPasswordHash)
-//            Log.d("NFCProjectTestDebug","Правильный hash логина: "+PasswordHash)
-//            Log.d("NFCProjectTestDebug","Сравнение логинов: "+(StudentPasswordHash==PasswordHash))
             if (LoginHash == StudentLoginHash && PasswordHash == StudentPasswordHash)
                 return true
         }

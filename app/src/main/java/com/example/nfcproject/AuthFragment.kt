@@ -90,23 +90,23 @@ class AuthFragment : Fragment() {
     }
 
     private fun sendDataViewModel() {
-        sharedViewModel.setStudentId(binding.studentId.text.toString())
+        sharedViewModel.setStudentCardId(binding.studentId.text.toString())
         sharedViewModel.setStudentFName(binding.fName.text.toString())
         sharedViewModel.setStudentLName(binding.lName.text.toString())
         sharedViewModel.onNFC()
     }
 
     private fun savePreferences(){
-        val studentSault = DBConnection().getSault(sharedViewModel.studentId.value.toString())
-        val studentLoginHash = DBConnection().getHash(studentSault+sharedViewModel.studentFName.value.toString())
-        val studentPasswordHash = DBConnection().getHash(studentSault+sharedViewModel.studentLName.value.toString())
-        UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_CARD_ID,sharedViewModel.studentId.value.toString())
+        val studentSalt = DBConnection().getSault(sharedViewModel.studentCardId.value.toString())
+        val studentLoginHash = DBConnection().getHash(studentSalt+sharedViewModel.studentFName.value.toString())
+        val studentPasswordHash = DBConnection().getHash(studentSalt+sharedViewModel.studentLName.value.toString())
+        UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_CARD_ID,sharedViewModel.studentCardId.value.toString())
         UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_LOGIN,studentLoginHash)
         UserDataStorage(context as Context).setPref(UserDataStorage.Prefs.USER_PASSWORD,studentPasswordHash)
     }
 
     private fun checkCredentials(StudentId:String,StudentFName:String,StudentLName:String):Boolean{
-        var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword,Sault FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
+        var rs = DBConnection().readDB(String.format("SELECT StudentLogin,StudentPassword,Salt FROM Students WHERE StudentCardId = '%s';",StudentId)) as ResultSet
         var DBLoginHash = ""
         var DBPasswordHash = ""
         var Sault = ""
@@ -117,13 +117,6 @@ class AuthFragment : Fragment() {
         }
         var StudentLoginHash = DBConnection().getHash(Sault+StudentFName)
         var StudentPasswordHash = DBConnection().getHash(Sault+StudentLName)
-//        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBLoginHash)
-//        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentLoginHash)
-//        Log.d("NFCProjectTestDebug","Сравнение "+(DBLoginHash==StudentLoginHash))
-//        Log.d("NFCProjectTestDebug","DB hash логина:        "+DBPasswordHash)
-//        Log.d("NFCProjectTestDebug","Введенный hash логина: "+StudentPasswordHash)
-//        Log.d("NFCProjectTestDebug","Сравнение "+(DBPasswordHash==StudentPasswordHash))
-
         if (DBLoginHash==StudentLoginHash && DBPasswordHash == StudentPasswordHash){
             return true
         }

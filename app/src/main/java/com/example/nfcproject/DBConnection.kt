@@ -59,12 +59,30 @@ class DBConnection {
         }
     }
 
-    //TODO Доделать
-    fun postStudentCheckout(StudentCardId: String, TagId:String):Boolean{
+    //Получение StudentId по StudentCardId
+    fun getStudentId(StudentCardId:String):String{
+        var StudentId = ""
         try {
             val conn = DBConnection().dbConn()
             val s: Statement = conn!!.createStatement()
-            var result = s.executeUpdate(String.format("INSERT INTO StudentCheckouts(StudentId,TagId) VALUES ('%s','%s')",))
+            var rs = s.executeQuery(String.format("SELECT StudentId FROM Students WHERE StudentCardId = '%s';",StudentCardId))
+            while (rs.next()){
+                StudentId = rs.getString(1).toByteArray(Charsets.UTF_16).toString(Charsets.UTF_16)
+            }
+        }
+        catch (ex: Exception){
+            Log.e("NFCProjectTestDebug : ", ex.message.toString())
+        }
+        return StudentId
+    }
+
+
+    //TODO Доделать
+    fun postStudentCheckout(StudentId: String, NFCTagId:String):Boolean{
+        try {
+            val conn = DBConnection().dbConn()
+            val s: Statement = conn!!.createStatement()
+            var result = s.executeUpdate(String.format("INSERT INTO StudentCheckouts(StudentId,NFCTagId) VALUES ('%s','%s')",))
             return true
         }
         catch (ex: Exception){
@@ -115,7 +133,7 @@ class DBConnection {
         try {
             val conn = DBConnection().dbConn()
             val s: Statement = conn!!.createStatement()
-            var rs = s.executeQuery(String.format("SELECT Sault FROM Students WHERE StudentCardId = '%s';",StudentCardId))
+            var rs = s.executeQuery(String.format("SELECT Salt FROM Students WHERE StudentCardId = '%s';",StudentCardId))
             while (rs.next()){
                 result = rs.getString(1)
             }

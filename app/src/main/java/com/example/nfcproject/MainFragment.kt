@@ -29,10 +29,11 @@ class MainFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             viewModel = sharedViewModel
         }
-        sharedViewModel.studentId.value?.let { showLog("TestMVVM", it) }
+        sharedViewModel.studentCardId.value?.let { showLog("TestMVVM", it) }
         MainActivity().readNFC()
 
     }
+
     //TODO Добавить считывание метки и запрос к БД (Серийник+НомерАудитории)
     private fun showLog(tag: String, msg: String){
         Log.d(tag, msg)

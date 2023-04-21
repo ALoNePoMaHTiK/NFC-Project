@@ -10,9 +10,9 @@ class MainViewModel : ViewModel() {
     private val _auditoryId = MutableLiveData<String>()
     val auditoryId: LiveData<String> = _auditoryId
 
-    //Идентификатор студента
-    private val _studentId = MutableLiveData<String>()
-    val studentId: LiveData<String> = _studentId
+    //Номер студенческого билета
+    private val _studentCardId = MutableLiveData<String>()
+    val studentCardId: LiveData<String> = _studentCardId
 
     // Имя студента
     private val _studentLName = MutableLiveData<String>()
@@ -29,12 +29,12 @@ class MainViewModel : ViewModel() {
     }
 
     /**
-     * Изменение идентификатора студента
+     * Изменение номера студенческого билета
      *
-     * @param studentId идентификатор студента
+     * @param studentId номер студенческого билета
      */
-    fun setStudentId(studentId: String) {
-        _studentId.value = studentId
+    fun setStudentCardId(studentCardId: String) {
+        _studentCardId.value = studentCardId
     }
 
     /**
@@ -60,7 +60,7 @@ class MainViewModel : ViewModel() {
         _studentLName.value = studentLName
     }
     private fun resetData() {
-        _studentId.value = ""
+        _studentCardId.value = ""
         _auditoryId.value = ""
         _studentFName.value = ""
         _studentLName.value = ""

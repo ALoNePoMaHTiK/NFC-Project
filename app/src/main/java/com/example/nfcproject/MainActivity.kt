@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity() {
         if (intent != null) {
             sendUserInputData()
             nfcTag = NFCHandler().processIntent(intent)
-            Log.d("NFCProjectTestDebug",nfcTag+sharedViewModel.studentId.value)
-            if (nfcTag != "" && sharedViewModel.studentId.value != "") {
+            Log.d("NFCProjectTestDebug",nfcTag+sharedViewModel.studentCardId.value)
+            if (nfcTag != "" && sharedViewModel.studentCardId.value != "") {
                 sendUserInputData()
             }
         }
@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveUserInputData(inputData:String){
         if(inputValidation(inputData)){
-            sharedViewModel.setStudentId(inputData.uppercase())
-            Log.d("NFCProjectTestDebug","Номер студенческого: "+sharedViewModel.studentId.value)
+            sharedViewModel.setStudentCardId(inputData.uppercase())
+            Log.d("NFCProjectTestDebug","Номер студенческого: "+sharedViewModel.studentCardId.value)
             /// запись в файл!!!!
             Toast.makeText(applicationContext,"Данные сохранены",Toast.LENGTH_LONG).show()
         }
