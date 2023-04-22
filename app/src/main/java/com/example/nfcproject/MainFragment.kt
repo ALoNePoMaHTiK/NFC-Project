@@ -30,8 +30,6 @@ class MainFragment : Fragment() {
             viewModel = sharedViewModel
         }
         sharedViewModel.studentCardId.value?.let { showLog("TestMVVM", it) }
-        MainActivity().readNFC()
-
     }
 
     //TODO Добавить считывание метки и запрос к БД (Серийник+НомерАудитории)

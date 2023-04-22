@@ -27,29 +27,11 @@ class NFCHandler {
          var result = ""
          for (curMsg in ndefMessages) {
             if (curMsg != null) {
-                Log.d("NFCProjectTestDebug", curMsg.toString())
-                Log.d("NFCProjectTestDebug", curMsg.records.size.toString())
                 for (curRecord in curMsg.records) {
-                    //Log.d("NFCProjectTestDebug", curRecord.payload.contentToString())
                     result = String(curRecord.payload).substring(3)
-                    Log.d("NFCProjectTestDebug", String(curRecord.payload).substring(3))
                 }
-
             }
         }
          return result
-    }
-    private fun readNFC(intent:Intent){
-        Log.d("NFCProjectTestDebug","Start reading NFC")
-        var messages:Array<Parcelable>?  = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-
-        if(messages != null){
-            for (message in messages){
-                var ndefMessage:NdefMessage = message as NdefMessage
-                for (record in ndefMessage.records){
-                    Log.d("NFCProjectTestDebug",record.payload.toString())
-                }
-            }
-        }
     }
 }

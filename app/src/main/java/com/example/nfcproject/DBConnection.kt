@@ -116,7 +116,7 @@ class DBConnection {
     }
 
     //Получение NFC метки по серийному номеру
-    fun getNFCTag(SerialNumber: String): String{
+    fun getNFCTagId(SerialNumber: String): String{
         var NFCTag = ""
         try {
             val rs = readDB(String.format("SELECT NFCTagId FROM NFCTags WHERE SerialNumber = '%s';", SerialNumber)) as ResultSet

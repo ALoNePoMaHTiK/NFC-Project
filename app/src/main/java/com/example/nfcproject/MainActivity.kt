@@ -1,5 +1,7 @@
 package com.example.nfcproject
 import android.content.Intent
+import android.nfc.NdefMessage
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -30,43 +32,49 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
         Log.d("NFCProjectTestDebug","New Intent")
-        if (intent != null && sharedViewModel.stateNFC.value == true) {
-            NFCHandler().processIntent(intent)
+        if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
+            //NFCHandler().processIntent(intent)
+            readNFC(intent)
         }
     }
 
-    fun readNFC(){
-        if (intent != null) {
-            sendUserInputData()
-            nfcTag = NFCHandler().processIntent(intent)
-            Log.d("NFCProjectTestDebug",nfcTag+sharedViewModel.studentCardId.value)
-            if (nfcTag != "" && sharedViewModel.studentCardId.value != "") {
-                sendUserInputData()
+//    fun readNFC(){
+//        if (intent != null) {
+//            sendUserInputData()
+//            nfcTag = NFCHandler().processIntent(intent)
+//            Log.d("NFCProjectTestDebug",nfcTag+sharedViewModel.studentCardId.value)
+//            if (nfcTag != "" && sharedViewModel.studentCardId.value != "") {
+//                sendUserInputData()
+//            }
+//        }
+//    }
+
+    fun readNFC(intent: Intent){
+        var result = ""
+        var serialNumber:String = ""
+        val rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
+        if (rawMessages != null) {
+            serialNumber = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
+            val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
+            for (i in rawMessages.indices) {
+                messages[i] = rawMessages[i] as NdefMessage;
+            }
+            for (curMsg in messages) {
+                if (curMsg != null) {
+                    for (curRecord in curMsg.records) {
+                        result = String(curRecord.payload).substring(3)
+                    }
+                }
             }
         }
-    }
-
-    private fun sendUserInputData(){
-
-        Toast.makeText(applicationContext,"Данные отправлены",Toast.LENGTH_LONG).show()
-    }
-
-    private fun saveUserInputData(inputData:String){
-        if(inputValidation(inputData)){
-            sharedViewModel.setStudentCardId(inputData.uppercase())
-            Log.d("NFCProjectTestDebug","Номер студенческого: "+sharedViewModel.studentCardId.value)
-            /// запись в файл!!!!
-            Toast.makeText(applicationContext,"Данные сохранены",Toast.LENGTH_LONG).show()
+        val NFCTagId = DBConnection().getNFCTagId(serialNumber)
+        if(NFCTagId==""){
+            Toast.makeText(applicationContext,"Метка повреждена!",Toast.LENGTH_LONG).show()
         }
-    }
-    private fun inputValidation(inputData:String): Boolean{
-        val countСharacter = 7
-        return if(countСharacter == inputData.length) {
-            true
-        }
-        else {
-            Toast.makeText(applicationContext,"Номер студенческого билета введен некоректно",Toast.LENGTH_LONG).show()
-            false
+        else{
+            val StudentId = DBConnection().getStudentId(sharedViewModel.studentCardId.value.toString())
+            DBConnection().postStudentCheckout(StudentId,NFCTagId)
+            Toast.makeText(applicationContext,"Данные отправлены!",Toast.LENGTH_LONG).show()
         }
     }
 }
