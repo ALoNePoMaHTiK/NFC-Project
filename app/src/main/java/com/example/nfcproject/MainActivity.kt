@@ -1,25 +1,20 @@
 package com.example.nfcproject
 import android.content.Intent
-import android.nfc.NdefMessage
+import android.icu.text.SimpleDateFormat
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.activityViewModels
 import com.example.nfcproject.databinding.ActivityMainBinding
 import com.example.nfcproject.model.MainViewModel
-import java.sql.ResultSet
+import retrofit2.*
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
-    lateinit var mainbtn:Button
-    lateinit var studNumberEditText:EditText
-
-    private var nfcTag:String = ""
 
     private lateinit var binding: ActivityMainBinding
     private val sharedViewModel: MainViewModel by viewModels()
@@ -27,47 +22,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        Log.d("NFCProjectTestDebug",SimpleDateFormat("yyyy-MM-dd").format(Date()).toString())
+        Log.d("NFCProjectTestDebug",SimpleDateFormat("HH:mm",Locale.getDefault()).format(Date()))
     }
     override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
         Log.d("NFCProjectTestDebug","New Intent")
         if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
-            //NFCHandler().processIntent(intent)
             readNFC(intent)
         }
     }
 
-//    fun readNFC(){
-//        if (intent != null) {
-//            sendUserInputData()
-//            nfcTag = NFCHandler().processIntent(intent)
-//            Log.d("NFCProjectTestDebug",nfcTag+sharedViewModel.studentCardId.value)
-//            if (nfcTag != "" && sharedViewModel.studentCardId.value != "") {
-//                sendUserInputData()
-//            }
-//        }
-//    }
-
     fun readNFC(intent: Intent){
-        var result = ""
-        var serialNumber:String = ""
-        val rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-        if (rawMessages != null) {
-            serialNumber = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
-            val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
-            for (i in rawMessages.indices) {
-                messages[i] = rawMessages[i] as NdefMessage;
-            }
-            for (curMsg in messages) {
-                if (curMsg != null) {
-                    for (curRecord in curMsg.records) {
-                        result = String(curRecord.payload).substring(3)
-                    }
-                }
-            }
-        }
-        val NFCTagId = DBConnection().getNFCTagId(serialNumber)
+        val NFCTagId = DBConnection().getNFCTagId(NFCHandler().getNFCSerialNumber(intent))
         if(NFCTagId==""){
             Toast.makeText(applicationContext,"Метка повреждена!",Toast.LENGTH_LONG).show()
         }
@@ -75,6 +42,33 @@ class MainActivity : AppCompatActivity() {
             val StudentId = DBConnection().getStudentId(sharedViewModel.studentCardId.value.toString())
             DBConnection().postStudentCheckout(StudentId,NFCTagId)
             Toast.makeText(applicationContext,"Данные отправлены!",Toast.LENGTH_LONG).show()
+            sendToTimeTable()
         }
+    }
+
+    //TODO отображение результата отметки на паре
+
+    fun sendToTimeTable(){
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/visiting/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
+        val visitingApi = retrofit.create(VisitingAPI::class.java)
+
+        val body = Visiting("9:00","10:30",SimpleDateFormat("yyyy-MM-dd").format(Date()),"НФЦГ-01-22")
+        //TODO Добавить корутину
+        visitingApi.setVisitingByStudentId(sharedViewModel.studentCardId.value.toString(),body).enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e("NFCProjectTestDebug :", t.message.toString())
+            }
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    Log.d("NFCProjectTestDebug :", response?.body().toString())
+                }
+                Log.d("NFCProjectTestDebug :", response?.code().toString())
+            }
+
+        })
     }
 }
