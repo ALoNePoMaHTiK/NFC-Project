@@ -22,8 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d("NFCProjectTestDebug",SimpleDateFormat("yyyy-MM-dd").format(Date()).toString())
-        Log.d("NFCProjectTestDebug",SimpleDateFormat("HH:mm",Locale.getDefault()).format(Date()))
+        getLessonData()
     }
     override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
@@ -47,10 +46,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     //TODO отображение результата отметки на паре
+    fun getLessonData(){
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
+        val visitingApi = retrofit.create(VisitingAPI::class.java)
+        //TODO Добавить корутину
+        visitingApi.getLesson("9:00","10:30",SimpleDateFormat("yyyy-MM-dd").format(Date())).enqueue(object : Callback<Lesson> {
+            override fun onFailure(call: Call<Lesson>, t: Throwable) {
+                Log.e("NFCProjectTestDebug :", t.message.toString())
+            }
+            override fun onResponse(call: Call<Lesson>, response: Response<Lesson>) {
+                if (response.isSuccessful) {
+                    Log.d("NFCProjectTestDebug :", response.body()?.disciplineName.toString())
+                    Log.d("NFCProjectTestDebug :", response.body()?.startAt.toString())
+                    Log.d("NFCProjectTestDebug :", response.body()?.finishAt.toString())
+                }
+                Log.d("NFCProjectTestDebug :", response?.code().toString())
+            }
+
+        })
+    }
 
     fun sendToTimeTable(){
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/visiting/")
+            .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
         val visitingApi = retrofit.create(VisitingAPI::class.java)
@@ -63,8 +84,7 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
-                    val body = response.body()
-                    Log.d("NFCProjectTestDebug :", response?.body().toString())
+                    Log.d("NFCProjectTestDebug :", "Success")
                 }
                 Log.d("NFCProjectTestDebug :", response?.code().toString())
             }
