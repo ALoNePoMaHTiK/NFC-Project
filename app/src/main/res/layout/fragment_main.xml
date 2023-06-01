@@ -7,6 +7,9 @@
         <variable
             name="viewModel"
             type="com.example.nfcproject.model.MainViewModel" />
+        <variable
+            name="jViewModel"
+            type="com.example.nfcproject.model.JournalViewModel" />
     </data>
 
     <FrameLayout
@@ -30,21 +33,21 @@
                 android:id="@+id/fNameLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.studentFName}"
+                android:text="@{jViewModel.nameLesson}"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/lNameLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.studentLName}"
+                android:text="@{jViewModel.timeStartLesson}"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/studentIdLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.studentCardId}"
+                android:text="@{jViewModel.timeEndtLesson}"
                 android:textSize="20sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

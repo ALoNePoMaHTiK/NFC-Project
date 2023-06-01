@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.nfcproject.databinding.FragmentMainBinding
+import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
-import java.sql.ResultSet
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val sharedViewModel: MainViewModel by activityViewModels()
+    private val journalViewModel: JournalViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,8 +30,10 @@ class MainFragment : Fragment() {
         binding?.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = sharedViewModel
+            jViewModel = journalViewModel
         }
-        sharedViewModel.studentCardId.value?.let { showLog("TestMVVM", it) }
+
+        //sharedViewModel.studentCardId.value?.let { showLog("TestMVVM", it) }
     }
 
     //TODO Добавить считывание метки и запрос к БД (Серийник+НомерАудитории)

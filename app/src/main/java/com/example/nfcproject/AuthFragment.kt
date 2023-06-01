@@ -57,7 +57,7 @@ class AuthFragment : Fragment() {
         }
         else {
             if (fNameRegex.matches(StudentFName) || lNameRegex.matches(StudentLName))
-                showMessage("Фамилия или Имя введены некоректно")
+                showMessage("Фамилия или имя введены некоректно")
             else
                 showMessage("Номер студенческого билета введен некоректно")
             false

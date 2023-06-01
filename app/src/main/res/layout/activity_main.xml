@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/melkie_zhaby_na_vertikalnom_fone"
+
     tools:context=".MainActivity">
 
 
@@ -16,6 +17,7 @@
         tools:layout_editor_absoluteX="210dp"
         tools:layout_editor_absoluteY="255dp"
         app:navGraph="@navigation/nav_graph"
+        android:background="#B3FFFFFF"
         app:defaultNavHost="true"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

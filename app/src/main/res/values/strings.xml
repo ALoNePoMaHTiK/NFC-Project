@@ -12,4 +12,6 @@
     <string name="yourNameText">Ваше имя</string>
     <string name="yourLNameText">Ваша фамилия</string>
     <string name="yourStudentIdText">Номер студенческого</string>
+
+
 </resources>
