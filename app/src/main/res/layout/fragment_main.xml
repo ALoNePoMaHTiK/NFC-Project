@@ -27,38 +27,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/helloText"
+                android:textStyle="bold"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/fNameLabel"
+                android:id="@+id/nameLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{jViewModel.nameLesson}"
+                android:textStyle="bold"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/lNameLabel"
+                android:id="@+id/timeStartLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{jViewModel.timeStartLesson}"
+                android:textStyle="bold"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/studentIdLabel"
+                android:id="@+id/timeEndtLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{jViewModel.timeEndtLesson}"
+                android:textStyle="bold"
                 android:textSize="20sp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <TextView
                     android:id="@+id/textView14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Отсканируйте метку"
+                    android:textStyle="bold"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

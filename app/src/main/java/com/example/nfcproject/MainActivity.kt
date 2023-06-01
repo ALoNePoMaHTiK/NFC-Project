@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.nfcproject.databinding.ActivityMainBinding
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
+import kotlinx.coroutines.runBlocking
 import retrofit2.*
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    override fun onNewIntent(intent: Intent?){
+     override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
         Log.d("NFCProjectTestDebug","New Intent")
         if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
@@ -62,15 +63,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun readNFC(intent: Intent){
+     fun readNFC(intent: Intent){
         val NFCTagId = DBConnection().getNFCTagId(NFCHandler().getNFCSerialNumber(intent))
         if(NFCTagId==""){
-            Toast.makeText(applicationContext,"Метка повреждена!",Toast.LENGTH_LONG).show()
+            showMessage("Метка повреждена!")
         }
         else{
             val StudentId = DBConnection().getStudentId(sharedViewModel.studentCardId.value.toString())
             DBConnection().postStudentCheckout(StudentId,NFCTagId)
-            Toast.makeText(applicationContext,"Данные отправлены!",Toast.LENGTH_LONG).show()
+            showMessage("Данные отправлены!")
             sendToTimeTable()
         }
     }
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     //Возвращает информацию о паре
     //Если время отметки неподходящее
     //Или пара отсутствует возвращяет пустой оъект Lesson
-    fun getCurrentLessonData():Lesson{
+     fun getCurrentLessonData():Lesson {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -104,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    fun sendToTimeTable(){
+     fun sendToTimeTable() = runBlocking {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -128,12 +129,13 @@ class MainActivity : AppCompatActivity() {
                     }
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            Log.d("NFCProjectTestDebug :", "Success")
+                            showLog("NFCProjectTestDebug :","Success")
                         }
-                        Log.d("NFCProjectTestDebug :", response?.code().toString())
+                        showLog("NFCProjectTestDebug :",response?.code().toString())
                     }
-
                 })
         }
     }
+    private fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+    private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
 }
