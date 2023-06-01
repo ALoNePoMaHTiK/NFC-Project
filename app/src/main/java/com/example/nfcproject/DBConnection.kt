@@ -2,7 +2,6 @@ package com.example.nfcproject
 
 import android.os.StrictMode
 import android.util.Log
-import java.nio.charset.Charset
 import java.sql.*
 
 
@@ -18,7 +17,7 @@ class DBConnection {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         var conn : Connection? = null
-        var connString: String?
+        val connString: String?
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver")
             connString = "jdbc:jtds:sqlserver://$ip;databaseName=$db;user=$username;password=$password;"
@@ -164,7 +163,7 @@ class DBConnection {
         return result
     }
 
-    //?Получение хэша сообщения
+    //Получение хэша сообщения
     fun getHash(text:String):String{
         var result = ""
         try {
