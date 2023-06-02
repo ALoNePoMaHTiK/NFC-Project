@@ -33,9 +33,9 @@ class MainFragment : Fragment() {
             jViewModel = journalViewModel
         }
 
-        //sharedViewModel.studentCardId.value?.let { showLog("TestMVVM", it) }
+
     }
 
-    //TODO Добавить считывание метки и запрос к БД (Серийник+НомерАудитории)
+
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
 }

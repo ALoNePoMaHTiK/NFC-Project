@@ -13,5 +13,5 @@ data class Lesson(
     val journalId:String,
     val startAt:String,
     val updatedAt:String) {
-    constructor() : this("", Date(), "", "",0,"","","","","")
+    constructor() : this("", Date(), "", "Писька",0,"","","","","")
 }

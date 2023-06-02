@@ -16,6 +16,7 @@ class JournalViewModel: ViewModel() {
     // Время конца пары
     private val _timeEndtLesson = MutableLiveData<String>()
     val timeEndtLesson: LiveData<String> = _timeEndtLesson
+
     init {
         resetData()
     }
