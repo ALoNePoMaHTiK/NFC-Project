@@ -17,6 +17,13 @@ class JournalViewModel: ViewModel() {
     private val _timeEndtLesson = MutableLiveData<String>()
     val timeEndtLesson: LiveData<String> = _timeEndtLesson
 
+    // сообщение
+    private val _мessage = MutableLiveData<String>()
+    val mes: LiveData<String> = _мessage
+
+    fun setTextMessage(text: String){
+        _мessage.value = text
+    }
     init {
         resetData()
     }
@@ -24,6 +31,7 @@ class JournalViewModel: ViewModel() {
         setNameLesson(name)
         setTimeStartLesson(timeStart)
         setTimeEndLesson(timeEnd)
+
     }
     fun setLesson (name: String, timeLesson: Pair<String, String>){
         setNameLesson(name)
@@ -43,5 +51,6 @@ class JournalViewModel: ViewModel() {
         _nameLesson.value = "Нет занятий"
         _timeStartLesson.value = "--:--"
         _timeEndtLesson.value = "--:--"
+        _мessage.value = "Отсканируйте метку"
     }
 }

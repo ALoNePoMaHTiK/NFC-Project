@@ -7,18 +7,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import com.example.nfcproject.databinding.ActivityMainBinding
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import retrofit2.*
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,15 +35,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setCurrentLessonData()
-        //getLessonData()
-    }
 
-     override fun onNewIntent(intent: Intent?){
-        super.onNewIntent(intent)
-        if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
-            readNFC(intent)
-        }
+        getCurrentLessonTime()
+        //getLessonData()
     }
 
     //Возвращяется пара (Начало текущей пары, Конец текущей пары)
@@ -65,7 +55,15 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    fun readNFC(intent: Intent){
+     override fun onNewIntent(intent: Intent?){
+        super.onNewIntent(intent)
+        Log.d("NFCProjectTestDebug","New Intent")
+        if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
+            readNFC(intent)
+        }
+    }
+
+     fun readNFC(intent: Intent){
         val NFCTagId = DBConnection().getNFCTagId(NFCHandler().getNFCSerialNumber(intent))
         if(NFCTagId==""){
             showMessage("Метка повреждена!")
@@ -73,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         else{
             val StudentId = DBConnection().getStudentId(sharedViewModel.studentCardId.value.toString())
             DBConnection().postStudentCheckout(StudentId,NFCTagId)
-            //showMessage("Данные отправлены!")
+            showMessage("Данные отправлены!")
             sendToTimeTable()
         }
     }
@@ -82,30 +80,30 @@ class MainActivity : AppCompatActivity() {
     //Возвращает информацию о паре
     //Если время отметки неподходящее
     //Или пара отсутствует возвращяет пустой оъект Lesson
-     fun setCurrentLessonData() {
+     fun getCurrentLessonData():Lesson {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
         val visitingApi = retrofit.create(VisitingAPI::class.java)
         //TODO Добавить корутину
+        var result = Lesson()
         val lessonTime = getCurrentLessonTime()
         if (lessonTime != Pair("","")){
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             visitingApi.getLesson(lessonTime.first,lessonTime.second,currentDate).enqueue(object : Callback<Lesson> {
                 override fun onFailure(call: Call<Lesson>, t: Throwable) {
-                    showError("NFCProjectTestDebug","Не получилось получить данные о паре!")
+                    Log.e("NFCProjectTestDebug :", t.message.toString())
                 }
                 override fun onResponse(call: Call<Lesson>, response: Response<Lesson>) {
                     if (response.isSuccessful) {
-                        journalViewModel.setLesson(response.body()?.disciplineName.toString(),response.body()?.startAt.toString(),response.body()?.finishAt.toString())
+                        result = response.body() as Lesson
                     }
-                    showLog("NFCProjectTestDebug","Код ответа : " + response.code().toString())
                 }
             })
         }
+        return result
     }
-
 
      fun sendToTimeTable() = runBlocking {
         val retrofit = Retrofit.Builder()
@@ -127,16 +125,11 @@ class MainActivity : AppCompatActivity() {
             visitingApi.setVisitingByStudentId(sharedViewModel.studentCardId.value.toString(), body)
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        showMessage("Проблема с подключением к API")
-                        showError("NFCProjectTestDebug",t.message.toString())
+                        Log.e("NFCProjectTestDebug :", t.message.toString())
                     }
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            showMessage("Вы успешно отмечены!")
                             showLog("NFCProjectTestDebug :","Success")
-                        }
-                        if (response.code() == 404) {
-                            showMessage("Вы уже были отмечены!")
                         }
                         showLog("NFCProjectTestDebug :",response?.code().toString())
                     }
@@ -145,5 +138,4 @@ class MainActivity : AppCompatActivity() {
     }
     private fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
-    private fun showError(tag: String, msg: String) = Log.e(tag, msg)
 }

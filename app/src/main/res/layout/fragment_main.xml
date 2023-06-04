@@ -61,7 +61,7 @@
                     android:id="@+id/textView14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Отсканируйте метку"
+                    android:text="@{jViewModel.mes}"
                     android:textStyle="bold"
                     android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
