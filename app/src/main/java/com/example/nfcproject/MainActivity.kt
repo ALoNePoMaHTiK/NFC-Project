@@ -28,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         Pair("19:40","21:00")
     )
 
+    val Statuses = mapOf(
+        "Success" to "Вы успешно отмечены",
+        "Wait" to "Отсканируйте метку",
+        "None" to "Дождитесь начала пары"
+    )
+
     private lateinit var binding: ActivityMainBinding
     private val sharedViewModel: MainViewModel by viewModels()
     private val journalViewModel: JournalViewModel by viewModels()
@@ -36,8 +42,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getCurrentLessonTime()
-        //getLessonData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (getCurrentLessonTime().first != journalViewModel.timeStartLesson.value)
+            setCurrentLessonData()
     }
 
     //Возвращяется пара (Начало текущей пары, Конец текущей пары)
@@ -52,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 result = i
             }
         }
+        showLog("NFCProjectTestDebug","Текущая пара " + result.first)
         return result
     }
 
@@ -71,38 +82,40 @@ class MainActivity : AppCompatActivity() {
         else{
             val StudentId = DBConnection().getStudentId(sharedViewModel.studentCardId.value.toString())
             DBConnection().postStudentCheckout(StudentId,NFCTagId)
-            showMessage("Данные отправлены!")
             sendToTimeTable()
         }
     }
 
-    //TODO отображение результата отметки на паре
     //Возвращает информацию о паре
     //Если время отметки неподходящее
     //Или пара отсутствует возвращяет пустой оъект Lesson
-     fun getCurrentLessonData():Lesson {
+    fun setCurrentLessonData() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
         val visitingApi = retrofit.create(VisitingAPI::class.java)
         //TODO Добавить корутину
-        var result = Lesson()
         val lessonTime = getCurrentLessonTime()
         if (lessonTime != Pair("","")){
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             visitingApi.getLesson(lessonTime.first,lessonTime.second,currentDate).enqueue(object : Callback<Lesson> {
                 override fun onFailure(call: Call<Lesson>, t: Throwable) {
-                    Log.e("NFCProjectTestDebug :", t.message.toString())
+                    showError("NFCProjectTestDebug","Не получилось получить данные о паре!")
                 }
                 override fun onResponse(call: Call<Lesson>, response: Response<Lesson>) {
                     if (response.isSuccessful) {
-                        result = response.body() as Lesson
+                        journalViewModel.setLesson(response.body()?.disciplineName.toString(),response.body()?.startAt.toString(),response.body()?.finishAt.toString())
+                        journalViewModel.setTextMessage(Statuses["Wait"].toString())
                     }
+                    if (response.code()==404){
+                        journalViewModel.resetData()
+                        journalViewModel.setTextMessage(Statuses["None"].toString())
+                    }
+                    showLog("NFCProjectTestDebug","Код ответа : " + response.code().toString())
                 }
             })
         }
-        return result
     }
 
      fun sendToTimeTable() = runBlocking {
@@ -125,17 +138,23 @@ class MainActivity : AppCompatActivity() {
             visitingApi.setVisitingByStudentId(sharedViewModel.studentCardId.value.toString(), body)
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.e("NFCProjectTestDebug :", t.message.toString())
+                        showMessage("Проблема с подключением к API")
+                        showError("NFCProjectTestDebug",t.message.toString())
                     }
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
+                            journalViewModel.setTextMessage(Statuses["Success"].toString())
                             showLog("NFCProjectTestDebug :","Success")
                         }
-                        showLog("NFCProjectTestDebug :",response?.code().toString())
+                        if (response.code() == 404) {
+                            showMessage("Вы уже были отмечены!")
+                        }
+                        showLog("NFCProjectTestDebug",response?.code().toString())
                     }
                 })
         }
     }
     private fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
+    private fun showError(tag: String, msg: String) = Log.e(tag, msg)
 }

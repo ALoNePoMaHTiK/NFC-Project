@@ -47,10 +47,10 @@ class JournalViewModel: ViewModel() {
     fun setTimeStartLesson(timeStart: String){
         _timeStartLesson.value = timeStart
     }
-    private fun resetData(){
+    fun resetData(){
         _nameLesson.value = "Нет занятий"
         _timeStartLesson.value = "--:--"
         _timeEndtLesson.value = "--:--"
-        _мessage.value = "Отсканируйте метку"
+        _мessage.value = "Дождитесь начала пары"
     }
 }
