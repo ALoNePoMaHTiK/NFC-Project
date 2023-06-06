@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/melkie_zhaby_na_vertikalnom_fone"
+    android:background="#6699cc"
     tools:context=".MainActivity">
-
+    <!--android:background="@drawable/melkie_zhaby_na_vertikalnom_fone"
+    android:background="#B3FFFFFF"
+    -->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView4"
@@ -16,7 +18,7 @@
         tools:layout_editor_absoluteX="210dp"
         tools:layout_editor_absoluteY="255dp"
         app:navGraph="@navigation/nav_graph"
-        android:background="#B3FFFFFF"
+
         app:defaultNavHost="true"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
