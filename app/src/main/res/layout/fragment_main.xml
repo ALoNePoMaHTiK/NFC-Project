@@ -24,6 +24,7 @@
 
             <TextView
                 android:id="@+id/helloLabel"
+                android:padding="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/helloText"
@@ -32,6 +33,7 @@
 
             <TextView
                 android:id="@+id/nameLesson"
+                android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{jViewModel.nameLesson}"
@@ -40,6 +42,8 @@
 
             <TextView
                 android:id="@+id/timeStartLesson"
+                android:paddingTop="15dp"
+                android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{jViewModel.timeStartLesson}"
@@ -48,6 +52,8 @@
 
             <TextView
                 android:id="@+id/timeEndtLesson"
+                android:paddingTop="10dp"
+                android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{jViewModel.timeEndtLesson}"
