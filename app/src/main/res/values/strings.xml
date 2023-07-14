@@ -12,6 +12,12 @@
     <string name="yourNameText">Ваше имя</string>
     <string name="yourLNameText">Ваша фамилия</string>
     <string name="yourStudentIdText">Номер студенческого</string>
-
-
+    <string name="button_save">Войти</string>
+    <string name="button_cancel">Сбросить</string>
+    <string name="hint_name">Имя</string>
+    <string name="hint_surname">Фамилия</string>
+    <string name="hint_studnum">№ студенческого билета</string>
+    <string name="start_time">Начало: </string>
+    <string name="end_time">Окончание: </string>
+    <string name="subject">Дисциплина: </string>
 </resources>
