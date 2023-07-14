@@ -134,6 +134,12 @@ class MainActivity : AppCompatActivity() {
                 currentDate,
                 "НФЦГ-01-22"
             )
+
+            showLog("NFCProjectTestDebug",sharedViewModel.studentCardId.value.toString())
+            showLog("NFCProjectTestDebug",lessonTime.first)
+            showLog("NFCProjectTestDebug",lessonTime.second)
+            showLog("NFCProjectTestDebug",currentDate)
+            showLog("NFCProjectTestDebug","НФЦГ-01-22")
             //TODO Добавить корутину
             visitingApi.setVisitingByStudentId(sharedViewModel.studentCardId.value.toString(), body)
                 .enqueue(object : Callback<String> {
@@ -149,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                         if (response.code() == 404) {
                             showMessage("Вы уже были отмечены!")
                         }
-                        showLog("NFCProjectTestDebug",response?.code().toString())
+                        showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
                     }
                 })
         }

@@ -39,7 +39,7 @@
                 android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@string/subject(jViewModel.nameLesson)}"
+                android:text="@{@string/subject+jViewModel.nameLesson}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -49,7 +49,7 @@
                 android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@string/start_time(jViewModel.timeStartLesson)}"
+                android:text="@{@string/start_time+jViewModel.timeStartLesson}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -59,7 +59,7 @@
                 android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@string/end_time(jViewModel.timeEndtLesson)}"
+                android:text="@{@string/end_time+jViewModel.timeEndtLesson}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
