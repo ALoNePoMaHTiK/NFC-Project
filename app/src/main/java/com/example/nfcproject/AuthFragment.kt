@@ -40,7 +40,7 @@ class AuthFragment : Fragment() {
         val StudentFName = binding.fName.text.toString()
         val StudentLName = binding.lName.text.toString()
 
-        if(inputValidation(StudentCardId, StudentFName, StudentLName) || 1==1) {
+        if(inputValidation(StudentCardId, StudentFName, StudentLName)) {
             if(saveDataToDB()){
                 sendDataViewModel()
                 savePreferences()
