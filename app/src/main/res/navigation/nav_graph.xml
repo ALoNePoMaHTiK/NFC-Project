@@ -31,4 +31,9 @@
             android:id="@+id/action_startFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/studentAuth"
+        android:name="com.example.nfcproject.StudentAuth"
+        android:label="fragment_student_auth"
+        tools:layout="@layout/fragment_student_auth" />
 </navigation>

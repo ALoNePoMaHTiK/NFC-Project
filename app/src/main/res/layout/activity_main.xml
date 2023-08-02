@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8db3d9"
+    android:background="@drawable/main_background"
     tools:context=".MainActivity">
     <!--android:background="@drawable/melkie_zhaby_na_vertikalnom_fone"
     android:background="#B3FFFFFF"

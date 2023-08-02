@@ -20,4 +20,10 @@
     <string name="start_time">Начало: </string>
     <string name="end_time">Окончание: </string>
     <string name="subject">Дисциплина: </string>
+    <string name="label_SingUp">РЕГИСТРАЦИЯ</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_studentID">Student ID</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="ButtonSingUpLable">Зарегистрироваться</string>
 </resources>

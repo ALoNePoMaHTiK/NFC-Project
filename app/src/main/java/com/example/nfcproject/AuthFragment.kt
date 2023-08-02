@@ -66,7 +66,7 @@ class AuthFragment : Fragment() {
 
 
     private fun saveDataToDB():Boolean{
-        val StudentCardId = binding.studentCardId.text.toString()
+        val StudentCardId = binding.studentCardId.text.toString().uppercase()
         val StudentFName = binding.fName.text.toString()
         val StudentLName = binding.lName.text.toString()
         val rs = DBConnection().searchStudentByCardId(StudentCardId)

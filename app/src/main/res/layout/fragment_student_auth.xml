@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="14dp"
+        android:paddingTop="10dp">
+
+        <ImageView
+            android:layout_width="201dp"
+            android:layout_height="187dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="45dp"
+            app:srcCompat="@drawable/univ_logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="@string/label_SingUp"
+            android:textSize="32dp"></TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="#75C0C0C0"
+            android:padding="24dp"
+            android:layout_height="match_parent">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.NFCProject.TextInputLayout"
+                android:id="@+id/email_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.NFCProject.TextInputLayout"
+                android:id="@+id/studentID_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_studentID">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/studentID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.NFCProject.TextInputLayout"
+                android:id="@+id/password_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.NFCProject.TextInputLayout"
+                android:id="@+id/confirm_password_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_confirm_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_marginTop="10dp"
+                android:id="@+id/SaveButton"
+                style="@style/Widget.NFCProject.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:text="@string/ButtonSingUpLable"
+                app:backgroundTint="#3165A3"
+                app:cornerRadius="5dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Войти"
+                android:gravity="center">
+
+            </TextView>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</layout>

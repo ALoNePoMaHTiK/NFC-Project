@@ -24,7 +24,6 @@ class MainFragment : Fragment() {
         binding = FragmentMainBinding.inflate(inflater,container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
@@ -32,8 +31,6 @@ class MainFragment : Fragment() {
             viewModel = sharedViewModel
             jViewModel = journalViewModel
         }
-
-
     }
 
 

@@ -32,6 +32,9 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 
