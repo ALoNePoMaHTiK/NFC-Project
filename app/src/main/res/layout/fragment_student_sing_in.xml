@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +27,7 @@
             android:fontFamily="@font/roboto"
             android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:text="@string/label_SingUp"
+            android:text="@string/label_SingIn"
             android:textSize="32dp"></TextView>
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,20 +50,6 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.NFCProject.TextInputLayout"
-                android:id="@+id/studentID_text_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_studentID">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/studentID"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.NFCProject.TextInputLayout"
@@ -78,40 +65,19 @@
                     android:inputType="text"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.NFCProject.TextInputLayout"
-                android:id="@+id/confirm_password_text_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_confirm_password">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/confirm_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:layout_marginTop="10dp"
-                android:id="@+id/SaveButton"
+                android:id="@+id/SingInButton"
                 style="@style/Widget.NFCProject.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"
-                android:text="@string/ButtonSingUpLable"
+                android:text="@string/ButtonSingInLable"
                 app:backgroundTint="#3165A3"
                 app:cornerRadius="5dp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Войти"
-                android:gravity="center">
-
-            </TextView>
         </LinearLayout>
 
 

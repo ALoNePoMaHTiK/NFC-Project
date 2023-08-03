@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startFragment">
+    app:startDestination="@id/student_singIn">
 
     <fragment
         android:id="@+id/authFragment"
@@ -36,4 +36,8 @@
         android:name="com.example.nfcproject.StudentAuth"
         android:label="fragment_student_auth"
         tools:layout="@layout/fragment_student_auth" />
+    <fragment
+        android:id="@+id/student_singIn"
+        android:name="com.example.nfcproject.student_singIn"
+        android:label="student_singIn" />
 </navigation>

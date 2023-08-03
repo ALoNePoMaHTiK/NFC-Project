@@ -25,5 +25,9 @@
     <string name="hint_studentID">Student ID</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm password</string>
+    <string name="hint_name_student">Name student</string>
+
     <string name="ButtonSingUpLable">Зарегистрироваться</string>
+    <string name="ButtonSingInLable">Войти</string>
+    <string name="label_SingIn">ВОЙТИ</string>
 </resources>
