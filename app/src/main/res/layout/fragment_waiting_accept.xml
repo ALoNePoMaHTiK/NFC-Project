@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sviewModel"
+            type="com.example.nfcproject.model.StudentViewModel" />
+    </data>
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="14dp"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="201dp"
+                android:layout_height="187dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:srcCompat="@drawable/univ_logo" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/roboto"
+                android:gravity="center"
+                android:text="@string/label_WaitingAccept"
+                android:textSize="32dp"></TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:background="#75C0C0C0"
+                android:padding="24dp"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="@{@string/email+sviewModel.email}"
+                    android:textSize="22dp"></TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="@{@string/studentID+sviewModel.studentId}"
+                    android:textSize="22dp"></TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/roboto"
+                    android:text="@{@string/student_group+sviewModel.groupId}"
+                    android:textSize="22dp"></TextView>
+
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/SingInButton"
+                    style="@style/Widget.NFCProject.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:text="@string/ButtonUpdate"
+                    app:backgroundTint="#3165A3"
+                    app:cornerRadius="5dp" />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</layout>

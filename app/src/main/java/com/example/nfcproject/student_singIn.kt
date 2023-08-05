@@ -8,19 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.databinding.FragmentStudentSingInBinding
 import com.example.nfcproject.model.APIModels.AuthData
 import com.example.nfcproject.model.APIModels.Student
 import com.example.nfcproject.model.StudentViewModel
-import kotlinx.coroutines.awaitAll
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.await
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Thread.sleep
 
 
 class student_singIn : Fragment() {
@@ -79,7 +77,7 @@ class student_singIn : Fragment() {
 
     private fun callAPI(authData: AuthData){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.88.21:5084/api/")
+            .baseUrl("http://192.168.1.33:5084/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
         val api = retrofit.create(DBAPI::class.java)
@@ -99,8 +97,10 @@ class student_singIn : Fragment() {
                             response.body()?.userId!!.toInt(),
                             response.body()?.groupId.toString(),
                             response.body()?.studentId.toString())
+                        goToWaitingAccept();
                     }
                     if (response.code() == 404) {
+                        showMessage("Неправильно введен логин / пароль")
                         showLog("NFCProjectTestDebug :","Неверные данные")
                     }
                     showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
@@ -110,5 +110,9 @@ class student_singIn : Fragment() {
 
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
     private fun showError(tag: String, msg: String) = Log.e(tag, msg)
+
+    private fun goToWaitingAccept(){
+        findNavController().navigate(R.id.action_student_singIn_to_waitingAccept)
+    }
 
 }

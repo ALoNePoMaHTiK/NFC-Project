@@ -39,5 +39,16 @@
     <fragment
         android:id="@+id/student_singIn"
         android:name="com.example.nfcproject.student_singIn"
-        android:label="student_singIn" />
+        android:label="student_singIn"
+        tools:layout="@layout/fragment_student_sing_in"
+        >
+        <action
+            android:id="@+id/action_student_singIn_to_waitingAccept"
+            app:destination="@id/waitingAccept" />
+    </fragment>
+    <fragment
+        android:id="@+id/waitingAccept"
+        android:name="com.example.nfcproject.WaitingAccept"
+        android:label="WaitingAccept"
+        tools:layout="@layout/fragment_waiting_accept"/>
 </navigation>

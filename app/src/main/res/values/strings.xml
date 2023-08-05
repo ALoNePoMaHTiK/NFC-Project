@@ -22,7 +22,7 @@
     <string name="subject">Дисциплина: </string>
     <string name="label_SingUp">РЕГИСТРАЦИЯ</string>
     <string name="hint_email">Email</string>
-    <string name="hint_studentID">Student ID</string>
+    <string name="hint_studentID">Номер студенчиского</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm password</string>
     <string name="hint_name_student">Name student</string>
@@ -30,4 +30,10 @@
     <string name="ButtonSingUpLable">Зарегистрироваться</string>
     <string name="ButtonSingInLable">Войти</string>
     <string name="label_SingIn">ВОЙТИ</string>
+    <string name="label_WaitingAccept">ДОЖДИТЕСЬ ПОДТВЕРЖДЕНИЯ АДМИНИСТРАТОРА</string>
+    <string name="email">Email: </string>
+    <string name="studentID">Номер студенчиского: </string>
+    <string name="student_group">Группа: </string>
+    <string name="ButtonUpdate">Обновить</string>
+
 </resources>
