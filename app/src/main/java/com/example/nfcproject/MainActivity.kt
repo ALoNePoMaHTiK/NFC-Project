@@ -54,15 +54,15 @@ class MainActivity : AppCompatActivity() {
     //Если текущее время не соотвествует ни одному времени пары, то возращается пустое значение Pair("","")
     fun getCurrentLessonTime():Pair<String,String>{
         var result:Pair<String,String> = Pair("","")
-        for(i in LessonTimeTable){
+        for(i in LessonTimeTable) {
             val firstTime = SimpleDateFormat("HH:mm").parse(i.first).time
             val secondTime = SimpleDateFormat("HH:mm").parse(i.second).time
-            val currentTime = SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(Date())).time
-            if( firstTime < currentTime && currentTime < secondTime){
+            val currentTime =
+                SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(Date())).time
+            if (firstTime < currentTime && currentTime < secondTime) {
                 result = i
             }
         }
-        showLog("NFCProjectTestDebug","Текущая пара " + result.first)
         return result
     }
 

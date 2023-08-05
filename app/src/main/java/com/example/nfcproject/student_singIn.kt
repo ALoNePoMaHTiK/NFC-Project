@@ -12,12 +12,15 @@ import com.example.nfcproject.databinding.FragmentStudentSingInBinding
 import com.example.nfcproject.model.APIModels.AuthData
 import com.example.nfcproject.model.APIModels.Student
 import com.example.nfcproject.model.StudentViewModel
+import kotlinx.coroutines.awaitAll
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.await
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Thread.sleep
 
 
 class student_singIn : Fragment() {
@@ -90,13 +93,12 @@ class student_singIn : Fragment() {
                 }
                 override fun onResponse(call: Call<Student>, response: Response<Student>) {
                     if (response.isSuccessful) {
-                        val student:Student = response.body()!!
                         showLog("NFCProjectTestDebug :","Success")
-                        // ОШИБКА АССИНХРОННОСТИ
-                        showLog("NFCProjectTestDebug :",student.StudentId)
-                        showLog("NFCProjectTestDebug :",student.Email)
-                        showLog("NFCProjectTestDebug :",student.UserId.toString())
-                        showLog("NFCProjectTestDebug :",student.GroupId)
+                        studentViewModel.setStudent(response.body()?.email.toString(),
+                            response.body()?.password.toString(),
+                            response.body()?.userId!!.toInt(),
+                            response.body()?.groupId.toString(),
+                            response.body()?.studentId.toString())
                     }
                     if (response.code() == 404) {
                         showLog("NFCProjectTestDebug :","Неверные данные")

@@ -1,8 +1,8 @@
 package com.example.nfcproject.model.APIModels
 
 data class Student(
-    val StudentId:String,
-    val Email:String,
-    val Password:String,
-    val UserId:Int,
-    val GroupId:String) {}
+    val studentId:String,
+    val email:String,
+    val password:String,
+    val userId:Int,
+    val groupId:String) {}
