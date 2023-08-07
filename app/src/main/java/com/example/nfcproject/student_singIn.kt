@@ -33,21 +33,6 @@ class student_singIn : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStudentSingInBinding.inflate(inflater,container, false)
-        var sds = StudentDataStorage(context as Context)
-        if(sds.contains(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED)){
-            studentViewModel.setStudent(
-                sds.getPref(StudentDataStorage.Prefs.EMAIL).toString(),
-                sds.getPref(StudentDataStorage.Prefs.PASSWORD).toString(),
-                sds.getPref(StudentDataStorage.Prefs.USER_ID).toInt(),
-                sds.getPref(StudentDataStorage.Prefs.GROUP_ID).toString(),
-                sds.getPref(StudentDataStorage.Prefs.STUDENT_ID).toString(),
-                sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean(),
-                sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean(),
-            )
-            if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
-                goToWaitingAccept()
-        }
-
         return binding.root
         }
 
@@ -130,7 +115,6 @@ class student_singIn : Fragment() {
     }
 
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
-    private fun showError(tag: String, msg: String) = Log.e(tag, msg)
 
     private fun saveStudentData(){
         var sds = StudentDataStorage(context as Context)

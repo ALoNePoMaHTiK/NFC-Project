@@ -10,12 +10,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.databinding.FragmentStartBinding
 import com.example.nfcproject.model.MainViewModel
+import com.example.nfcproject.model.StudentViewModel
 
 
 class StartFragment : Fragment() {
 
     private lateinit var binding: FragmentStartBinding
     private val sharedViewModel: MainViewModel by activityViewModels()
+    private val studentViewModel: StudentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,13 +29,34 @@ class StartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getAuth()
+        Navigate()
     }
     private fun goToAuthFragment(){
         findNavController().navigate(R.id.action_startFragment_to_authFragment)
     }
     private fun goToMainFragment(){
         findNavController().navigate(R.id.action_startFragment_to_mainFragment)
+    }
+
+    private fun Navigate(){
+        var sds = StudentDataStorage(context as Context)
+        if(sds.contains(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED)){
+            studentViewModel.setStudent(
+                sds.getPref(StudentDataStorage.Prefs.EMAIL),
+                sds.getPref(StudentDataStorage.Prefs.PASSWORD),
+                sds.getPref(StudentDataStorage.Prefs.USER_ID).toInt(),
+                sds.getPref(StudentDataStorage.Prefs.GROUP_ID),
+                sds.getPref(StudentDataStorage.Prefs.STUDENT_ID),
+                sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean(),
+                sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean(),
+            )
+            if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
+                goToWaitingAcceptFragment()
+            if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean())
+                goToMainFragment()
+        }
+        else
+            goToSignInFragment()
     }
 
     private fun getAuth(){
@@ -59,5 +82,12 @@ class StartFragment : Fragment() {
     private fun checkCredentials(StudentId: String, StudentLoginHash: String, StudentPasswordHash: String): Boolean{
         val credential = DBConnection().getStudentCredentials(StudentId)
         return (credential[0] != "" && credential[0] == StudentLoginHash && credential[1] == StudentPasswordHash)
+    }
+
+    private fun goToWaitingAcceptFragment(){
+        findNavController().navigate(R.id.action_student_singIn_to_waitingAccept)
+    }
+    private fun goToSignInFragment(){
+        findNavController().navigate(R.id.action_startFragment_to_student_singIn)
     }
 }

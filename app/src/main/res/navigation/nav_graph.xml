@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/student_singIn">
+    app:startDestination="@id/startFragment">
 
     <fragment
         android:id="@+id/authFragment"
@@ -30,6 +30,12 @@
         <action
             android:id="@+id/action_startFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_student_singIn"
+            app:destination="@id/student_singIn" />
+        <action
+            android:id="@+id/action_startFragment_to_waitingAccept"
+            app:destination="@id/waitingAccept" />
     </fragment>
     <fragment
         android:id="@+id/studentAuth"
@@ -50,5 +56,9 @@
         android:id="@+id/waitingAccept"
         android:name="com.example.nfcproject.WaitingAccept"
         android:label="WaitingAccept"
-        tools:layout="@layout/fragment_waiting_accept"/>
+        tools:layout="@layout/fragment_waiting_accept">
+        <action
+            android:id="@+id/action_waitingAccept_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
 </navigation>

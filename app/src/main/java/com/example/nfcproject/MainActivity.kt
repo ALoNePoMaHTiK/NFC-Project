@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nfcproject.databinding.ActivityMainBinding
+import com.example.nfcproject.model.APIModels.Lesson
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
 import kotlinx.coroutines.runBlocking

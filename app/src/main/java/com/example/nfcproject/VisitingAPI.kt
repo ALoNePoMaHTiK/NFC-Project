@@ -1,5 +1,6 @@
 package com.example.nfcproject
 
+import com.example.nfcproject.model.APIModels.Lesson
 import retrofit2.Call
 import retrofit2.http.*
 

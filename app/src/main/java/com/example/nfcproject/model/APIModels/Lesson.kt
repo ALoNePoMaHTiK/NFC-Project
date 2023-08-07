@@ -1,4 +1,4 @@
-package com.example.nfcproject
+package com.example.nfcproject.model.APIModels
 
 import java.util.*
 
