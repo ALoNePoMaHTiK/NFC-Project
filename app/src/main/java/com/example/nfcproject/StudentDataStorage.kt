@@ -21,7 +21,7 @@ class StudentDataStorage(context: Context) {
         return context?.getSharedPreferences(Path, Context.MODE_PRIVATE) as SharedPreferences
     }
 
-    fun getPref(pref: StudentDataStorage.Prefs):String{
+    fun getPref(pref: Prefs):String{
         val prefs = getSharedPrefs()
         if (prefs.contains(pref.text)) {
             return prefs.getString(pref.text,"").toString()
@@ -29,14 +29,14 @@ class StudentDataStorage(context: Context) {
         return ""
     }
 
-    fun setPref(pref: StudentDataStorage.Prefs, data:String){
+    fun setPref(pref: Prefs, data:String){
         val prefs = getSharedPrefs()
         val prefsEdit = prefs.edit()
         prefsEdit.putString(pref.text,data)
         prefsEdit.commit()
     }
 
-    fun contains(pref: StudentDataStorage.Prefs):Boolean{
+    fun contains(pref: Prefs):Boolean{
         val prefs = getSharedPrefs()
         return prefs.contains(pref.text)
     }
