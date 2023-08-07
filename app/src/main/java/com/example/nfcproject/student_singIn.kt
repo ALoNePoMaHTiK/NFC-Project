@@ -1,5 +1,6 @@
 package com.example.nfcproject
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -32,6 +33,21 @@ class student_singIn : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStudentSingInBinding.inflate(inflater,container, false)
+        var sds = StudentDataStorage(context as Context)
+        if(sds.contains(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED)){
+            studentViewModel.setStudent(
+                sds.getPref(StudentDataStorage.Prefs.EMAIL).toString(),
+                sds.getPref(StudentDataStorage.Prefs.PASSWORD).toString(),
+                sds.getPref(StudentDataStorage.Prefs.USER_ID).toInt(),
+                sds.getPref(StudentDataStorage.Prefs.GROUP_ID).toString(),
+                sds.getPref(StudentDataStorage.Prefs.STUDENT_ID).toString(),
+                sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean(),
+                sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean(),
+            )
+            if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
+                goToWaitingAccept()
+        }
+
         return binding.root
         }
 
@@ -77,7 +93,7 @@ class student_singIn : Fragment() {
 
     private fun callAPI(authData: AuthData){
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.33:5084/api/")
+            .baseUrl("http://192.168.88.21:5084/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
         val api = retrofit.create(DBAPI::class.java)
@@ -92,12 +108,17 @@ class student_singIn : Fragment() {
                 override fun onResponse(call: Call<Student>, response: Response<Student>) {
                     if (response.isSuccessful) {
                         showLog("NFCProjectTestDebug :","Success")
-                        studentViewModel.setStudent(response.body()?.email.toString(),
+                        studentViewModel.setStudent(
+                            response.body()?.email.toString(),
                             response.body()?.password.toString(),
                             response.body()?.userId!!.toInt(),
                             response.body()?.groupId.toString(),
-                            response.body()?.studentId.toString())
-                        goToWaitingAccept();
+                            response.body()?.studentId.toString(),
+                            response.body()?.isAccepted!!,
+                            response.body()?.isAcceptRequested!!
+                        )
+                        saveStudentData()
+                        goToWaitingAccept()
                     }
                     if (response.code() == 404) {
                         showMessage("Неправильно введен логин / пароль")
@@ -110,6 +131,17 @@ class student_singIn : Fragment() {
 
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
     private fun showError(tag: String, msg: String) = Log.e(tag, msg)
+
+    private fun saveStudentData(){
+        var sds = StudentDataStorage(context as Context)
+        sds.setPref(StudentDataStorage.Prefs.STUDENT_ID,studentViewModel.studentId.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.PASSWORD,studentViewModel.password.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.EMAIL,studentViewModel.email.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.USER_ID,studentViewModel.userId.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.GROUP_ID,studentViewModel.groupId.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.IS_ACCEPTED,studentViewModel.isAccepted.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED,studentViewModel.isAcceptRequested.value.toString())
+    }
 
     private fun goToWaitingAccept(){
         findNavController().navigate(R.id.action_student_singIn_to_waitingAccept)

@@ -5,4 +5,6 @@ data class Student(
     val email:String,
     val password:String,
     val userId:Int,
-    val groupId:String) {}
+    val groupId:String,
+    val isAccepted:Boolean,
+    val isAcceptRequested:Boolean) {}

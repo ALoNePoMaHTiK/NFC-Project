@@ -14,34 +14,27 @@ class StudentViewModel : ViewModel() {
     val userId: LiveData<Int> = _userId
     private val _groupId = MutableLiveData<String>()
     val groupId: LiveData<String> = _groupId
+    private val _isAccepted = MutableLiveData<Boolean>()
+    val isAccepted: LiveData<Boolean> = _isAccepted
+    private val _isAcceptRequested = MutableLiveData<Boolean>()
+    val isAcceptRequested: LiveData<Boolean> = _isAcceptRequested
 
-    fun setStudentEmail(email: String)
-    {
-        _email.value = email
-    }
-    fun setStudentPassword(password: String){
-        _password.value = password
-    }
+    fun setStudentEmail(email: String) {_email.value = email}
+    fun setStudentPassword(password: String) {_password.value = password }
+    fun setUserId(userId: Int) {_userId.value = userId}
+    fun setGroupId(groupId: String){ _groupId.value = groupId }
+    fun setStudentId(studentId: String){ _studentId.value = studentId}
+    fun setIsAccepted(isAccepted: Boolean){ _isAccepted.value = isAccepted}
+    fun setIsAcceptRequested(isAcceptRequested: Boolean){ _isAcceptRequested.value = isAcceptRequested}
 
-    fun setUserId(userId: Int)
-    {
-        _userId.value = userId
-    }
-
-    fun setGroupId(groupId: String){
-        _groupId.value = groupId
-    }
-
-    fun setStudentId(studentId: String){
-        _studentId.value = studentId
-    }
-
-    fun setStudent(email: String,password: String,userId: Int,groupId: String,studentId: String){
+    fun setStudent(email: String,password: String,userId: Int,groupId: String,studentId: String,isAccepted: Boolean,isAcceptRequested: Boolean){
         setStudentEmail(email)
         setStudentPassword(password)
         setUserId(userId)
         setGroupId(groupId)
         setStudentId(studentId)
+        setIsAccepted(isAccepted)
+        setIsAcceptRequested(isAcceptRequested)
     }
 
 }
