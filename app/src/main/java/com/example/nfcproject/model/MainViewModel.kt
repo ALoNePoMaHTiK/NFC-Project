@@ -3,6 +3,7 @@ package com.example.nfcproject.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.nfcproject.model.APIModels.Tag
 
 class MainViewModel : ViewModel() {
 
@@ -24,6 +25,10 @@ class MainViewModel : ViewModel() {
 
     private val _stateNFC = MutableLiveData<Boolean>()
     val stateNFC: LiveData<Boolean> = _stateNFC
+
+    private val _tag = MutableLiveData<Tag?>()
+    val tag: LiveData<Tag?> = _tag
+
     init {
         resetData()
     }
@@ -41,6 +46,11 @@ class MainViewModel : ViewModel() {
      * Изменение идентификатора аудитории
      * @param auditoryId идентификатор аудитории
      */
+
+    fun setTag(tag: Tag? ) {
+        _tag.value = tag
+    }
+
     fun setAuditoryId(auditoryId: String) {
         _auditoryId.value = auditoryId
     }
@@ -64,7 +74,7 @@ class MainViewModel : ViewModel() {
         _auditoryId.value = ""
         _studentFName.value = ""
         _studentLName.value = ""
-        offNFC()
+        onNFC()
         //TODO добавить определение включенность NFC службы
     }
 }

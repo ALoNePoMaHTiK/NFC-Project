@@ -1,4 +1,5 @@
 package com.example.nfcproject
+import RetrofitHelper
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.nfc.NfcAdapter
@@ -8,9 +9,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nfcproject.databinding.ActivityMainBinding
+import com.example.nfcproject.model.APIModels.Checkout
 import com.example.nfcproject.model.APIModels.Lesson
+import com.example.nfcproject.model.APIModels.Tag
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
+import com.example.nfcproject.model.StudentViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import retrofit2.*
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -37,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val sharedViewModel: MainViewModel by viewModels()
+    private val studentViewModel: StudentViewModel by viewModels()
     private val journalViewModel: JournalViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,15 +83,88 @@ class MainActivity : AppCompatActivity() {
     }
 
      fun readNFC(intent: Intent){
-        val NFCTagId = DBConnection().getNFCTagId(NFCHandler().getNFCSerialNumber(intent))
-        if(NFCTagId==""){
-            showMessage("Метка повреждена!")
+        val TagId = getNFCSerialNumber(intent)
+        getTag(TagId)           //Подождать
+        if(sharedViewModel.tag.value == null){
+            showLog("NFCProjectTestDebug","Метка повреждена!")
         }
         else{
-            val StudentId = DBConnection().getStudentId(sharedViewModel.studentCardId.value.toString())
-            DBConnection().postStudentCheckout(StudentId,NFCTagId)
-            sendToTimeTable()
+            showLog("NFCProjectTestDebug","Добавление отметки")
+            addCheckout()
         }
+    }
+
+    private fun addCheckout(){
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
+
+        var checkout = Checkout(UUID.randomUUID(),
+            null,
+            sharedViewModel.tag.value?.tagId.toString(),
+            studentViewModel.studentId.value.toString(),
+            null
+        )
+
+        api.CreateCheckout(checkout)
+            .enqueue(object : Callback<Checkout> {
+                override fun onFailure(call: Call<Checkout>, t: Throwable) {
+                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
+                    showLog("NFCProjectTestDebug",call.request().toString())
+                    showLog("NFCProjectTestDebug",t.message.toString())
+                    showLog("NFCProjectTestDebug",t.localizedMessage)
+                }
+                override fun onResponse(call: Call<Checkout>, response: Response<Checkout>) {
+                    if (response.isSuccessful) {
+                        showLog("NFCProjectTestDebug","Success")
+                        showMessage("Метка успешно считана!")
+                    }
+                    if (response.code() == 404) {
+                        showLog("NFCProjectTestDebug","Неверные данные об отметке")
+                        showMessage("Ошибка создания отметки")
+                    }
+                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
+                    showLog("NFCProjectTestDebug",call.request().toString())
+                }
+            })
+    }
+
+    private fun getTag(tagId: String){
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
+        runBlocking {
+            launch {
+                val result = api.GetTagById1(tagId)
+                if (result != null){
+                    showLog("NFCProjectTestDebug", result.body().toString())
+                    showLog("NFCProjectTestDebug","Получен серийный номер")
+                    sharedViewModel.setTag(result.body())
+                }
+            }.join()
+        }
+
+
+//        api.GetTagById(tagId)
+//            .enqueue(object : Callback<Tag> {
+//                override fun onFailure(call: Call<Tag>, t: Throwable) {
+//                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
+//                    showLog("NFCProjectTestDebug",call.request().toString())
+//                }
+//                override fun onResponse(call: Call<Tag>, response: Response<Tag>) {
+//                    if (response.isSuccessful) {
+//                        showLog("NFCProjectTestDebug","Success")
+//                        sharedViewModel.setTag(response.body()!!)
+//                    }
+//                    if (response.code() == 404) {
+//                        showLog("NFCProjectTestDebug","Метка не найдена")
+//                        sharedViewModel.setTag(null)
+//                    }
+//                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
+//                }
+//            })
+    }
+
+    private fun getNFCSerialNumber(intent: Intent):String{
+        var serialNumber:String = ""
+        serialNumber = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
+        return serialNumber
     }
 
     //Возвращает информацию о паре
@@ -161,6 +241,7 @@ class MainActivity : AppCompatActivity() {
                 })
         }
     }
+
     private fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
     private fun showError(tag: String, msg: String) = Log.e(tag, msg)
