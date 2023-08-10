@@ -3,9 +3,6 @@ package com.example.nfcproject
 import android.content.Intent
 import android.nfc.NdefMessage
 import android.nfc.NfcAdapter
-import android.os.Parcelable
-import android.util.Log
-import android.widget.Toast
 
 class NFCHandler {
 
@@ -14,26 +11,24 @@ class NFCHandler {
         serialNumber = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
         return serialNumber
     }
-
-     fun processIntent(checkIntent: Intent):String {
-         var result = ""
-         var serialNumber:String = ""
-         val rawMessages = checkIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-         if (rawMessages != null) {
-             serialNumber = checkIntent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
-             val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
-             for (i in rawMessages.indices) {
-                 messages[i] = rawMessages[i] as NdefMessage;
-             }
-             for (curMsg in messages) {
-                 if (curMsg != null) {
-                     for (curRecord in curMsg.records) {
-                         result = String(curRecord.payload).substring(3)
-                     }
-                 }
-             }
-         }
+    fun processIntent(checkIntent: Intent):String {
+        var result = ""
+        var serialNumber:String = ""
+        val rawMessages = checkIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
+        if (rawMessages != null) {
+            serialNumber = checkIntent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
+            val messages = arrayOfNulls<NdefMessage?>(rawMessages.size)
+            for (i in rawMessages.indices) {
+                messages[i] = rawMessages[i] as NdefMessage;
+            }
+            for (curMsg in messages) {
+                if (curMsg != null) {
+                    for (curRecord in curMsg.records) {
+                        result = String(curRecord.payload).substring(3)
+                    }
+                }
+            }
+        }
         return result
     }
-
 }

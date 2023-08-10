@@ -162,7 +162,6 @@ class DBConnection {
         }
         return result
     }
-
     //Получение хэша сообщения
     fun getHash(text:String):String{
         var result = ""

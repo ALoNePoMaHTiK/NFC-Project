@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
     }
 
     override fun onResume() {
@@ -79,15 +78,19 @@ class MainActivity : AppCompatActivity() {
         Log.d("NFCProjectTestDebug","New Intent")
         if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
             readNFC(intent)
+            
         }
     }
 
      fun readNFC(intent: Intent){
-        val TagId = getNFCSerialNumber(intent)
-        getTag(TagId)           //Подождать
-        if(sharedViewModel.tag.value == null){
-            showLog("NFCProjectTestDebug","Метка повреждена!")
-        }
+         //val TagId = getNFCSerialNumber(intent)
+         //getTag(TagId)
+         val data = getNFCSerialNumberAndDate(intent)
+         showLog("NFCProjectTestDebug","тег метки: ${data[0]} запись: ${data[1]}")
+         getTagByIdAndNote(data[0], data[1])
+         if(sharedViewModel.tag.value == null){
+            showLog("NFCProjectTestDebug","Метка повреждена! тег метки ${data[0]}")
+         }
         else{
             showLog("NFCProjectTestDebug","Добавление отметки")
             addCheckout()
@@ -96,7 +99,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun addCheckout(){
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
-
         var checkout = Checkout(UUID.randomUUID(),
             null,
             sharedViewModel.tag.value?.tagId.toString(),
@@ -125,6 +127,20 @@ class MainActivity : AppCompatActivity() {
                     showLog("NFCProjectTestDebug",call.request().toString())
                 }
             })
+    }
+
+    private fun getTagByIdAndNote(tagId: String, note: String){
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
+        runBlocking {
+            launch {
+                val result = api.GetTagByIdAndNote(tagId, note)
+                if (result != null){
+                    showLog("NFCProjectTestDebug", result.body().toString())
+                    showLog("NFCProjectTestDebug","Данные отправлены")
+                    sharedViewModel.setTag(result.body())
+                }
+            }.join()
+        }
     }
 
     private fun getTag(tagId: String){
@@ -164,7 +180,12 @@ class MainActivity : AppCompatActivity() {
     private fun getNFCSerialNumber(intent: Intent):String{
         var serialNumber:String = ""
         serialNumber = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
+        //var data = NFCHandler().processIntent(intent)
+        //showLog("NFCProjectTestDebug","tag: $data" )
         return serialNumber
+    }
+    private fun getNFCSerialNumberAndDate(intent: Intent): Array<String>{
+        return arrayOf(getNFCSerialNumber(intent), NFCHandler().processIntent(intent))
     }
 
     //Возвращает информацию о паре

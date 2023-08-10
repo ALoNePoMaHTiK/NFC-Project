@@ -1,5 +1,6 @@
 package com.example.nfcproject
 
+import RetrofitHelper
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -44,11 +45,7 @@ class WaitingAccept : Fragment() {
     }
 
     fun resetStudent(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.88.21:5084/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
-        val api = retrofit.create(DBAPI::class.java)
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         api.GetStudentById(studentViewModel.studentId.value.toString())
             .enqueue(object : Callback<Student> {
                 override fun onFailure(call: Call<Student>, t: Throwable) {

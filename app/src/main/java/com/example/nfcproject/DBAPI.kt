@@ -24,6 +24,11 @@ interface DBAPI {
     suspend fun GetTagById1(@Path(value = "tagId", encoded = false) tagId: String) : Response<Tag>
 
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
+    @GET("Tags/{tagId}/{note}")
+    suspend fun GetTagByIdAndNote(@Path(value = "tagId", encoded = false) tagId: String,
+                                  @Path(value = "note", encoded = false) note: String) : Response<Tag>
+
+    @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @POST("Checkouts")
     fun CreateCheckout(@Body checkout: Checkout): Call<Checkout>
 
