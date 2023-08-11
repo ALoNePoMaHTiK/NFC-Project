@@ -1,7 +1,9 @@
 package com.example.nfcproject
 
+import RetrofitHelper
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +11,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.databinding.FragmentStartBinding
+import com.example.nfcproject.model.APIModels.AuthData
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class StartFragment : Fragment() {
@@ -50,13 +55,34 @@ class StartFragment : Fragment() {
                 sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean(),
                 sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean(),
             )
-            if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
-                goToWaitingAcceptFragment()
-            if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean())
-                goToMainFragment()
+            if(checkAuth()){
+                if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
+                    goToWaitingAcceptFragment()
+                if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean())
+                    goToMainFragment()
+            }
         }
         else
             goToSignInFragment()
+    }
+
+    //TODO добавить проверку isAccepted
+    private fun checkAuth() : Boolean{
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
+        var result = false
+        runBlocking {
+            launch {
+                val response = api.CheckAuth(AuthData(studentViewModel.email.value.toString(),studentViewModel.password.value.toString()))
+                if (response != null){
+                    result = true
+                }
+                else{
+                    showLog("Сохраненные данные не соотвествуют актуальным данным!")
+                }
+            }.join()
+        }
+
+        return result
     }
 
     private fun getAuth(){
@@ -90,4 +116,6 @@ class StartFragment : Fragment() {
     private fun goToSignInFragment(){
         findNavController().navigate(R.id.action_startFragment_to_student_singIn)
     }
+
+    private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
 }

@@ -15,9 +15,9 @@ import com.example.nfcproject.model.APIModels.Tag
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -83,18 +83,46 @@ class MainActivity : AppCompatActivity() {
     }
 
      fun readNFC(intent: Intent){
-         //val TagId = getNFCSerialNumber(intent)
-         //getTag(TagId)
-         val data = getNFCSerialNumberAndDate(intent)
-         showLog("NFCProjectTestDebug","тег метки: ${data[0]} запись: ${data[1]}")
-         getTagByIdAndNote(data[0], data[1])
+         val nfcData = NFCHandler().processIntent(intent)
+         showLog("NFCProjectTestDebug","Серийный номер: ${nfcData.serialNumber}")
+         showLog("NFCProjectTestDebug","Старая запись: ${nfcData.oldNote}")
+         showLog("NFCProjectTestDebug","Новая запись: ${nfcData.newNote}")
+         getTag(nfcData.serialNumber)
          if(sharedViewModel.tag.value == null){
-            showLog("NFCProjectTestDebug","Метка повреждена! тег метки ${data[0]}")
+             showLog("NFCProjectTestDebug","Данная метка (${nfcData.serialNumber}) не зарегистрированна!")
          }
-        else{
-            showLog("NFCProjectTestDebug","Добавление отметки")
-            addCheckout()
-        }
+         else{
+             if (sharedViewModel.tag.value!!.note == nfcData.oldNote){
+                 sharedViewModel.setTag(Tag(
+                     sharedViewModel.tag.value!!.tagId,
+                     sharedViewModel.tag.value!!.placementDateTime,
+                     sharedViewModel.tag.value!!.roomId,
+                     nfcData.newNote,
+                     sharedViewModel.tag.value!!.isActive))
+                 setNewNote()
+                 addCheckout()
+             }
+             else{
+                 showLog("NFCProjectTestDebug","Данная метка (${nfcData.serialNumber}) не актуальна!")
+             }
+         }
+    }
+
+    private fun setNewNote(){
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
+        api.updateTag(sharedViewModel.tag.value!!)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
+                    showLog("NFCProjectTestDebug",call.request().toString())
+                }
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful)
+                        showLog("NFCProjectTestDebug","Метка успешно актуализирована!")
+                    if (response.code() == 404)
+                        showLog("NFCProjectTestDebug","Ошибка при попытке актуализации метки!")
+                }
+            })
     }
 
     private fun addCheckout(){
@@ -116,15 +144,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 override fun onResponse(call: Call<Checkout>, response: Response<Checkout>) {
                     if (response.isSuccessful) {
-                        showLog("NFCProjectTestDebug","Success")
-                        showMessage("Метка успешно считана!")
+                        showLog("NFCProjectTestDebug","Checkout успешно добавлен!")
                     }
                     if (response.code() == 404) {
                         showLog("NFCProjectTestDebug","Неверные данные об отметке")
-                        showMessage("Ошибка создания отметки")
                     }
-                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
-                    showLog("NFCProjectTestDebug",call.request().toString())
                 }
             })
     }
@@ -133,11 +157,11 @@ class MainActivity : AppCompatActivity() {
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         runBlocking {
             launch {
-                val result = api.GetTagByIdAndNote(tagId, note)
-                if (result != null){
-                    showLog("NFCProjectTestDebug", result.body().toString())
+                val response = api.GetTagByIdAndNote(tagId, note)
+                if (response != null){
+                    showLog("NFCProjectTestDebug", response.body().toString())
                     showLog("NFCProjectTestDebug","Данные отправлены")
-                    sharedViewModel.setTag(result.body())
+                    sharedViewModel.setTag(response.body())
                 }
             }.join()
         }
@@ -147,12 +171,11 @@ class MainActivity : AppCompatActivity() {
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         runBlocking {
             launch {
-                val result = api.GetTagById1(tagId)
-                if (result != null){
-                    showLog("NFCProjectTestDebug", result.body().toString())
-                    showLog("NFCProjectTestDebug","Получен серийный номер")
-                    sharedViewModel.setTag(result.body())
+                val response = api.GetTagById1(tagId)
+                if (response != null){
+                    showLog("NFCProjectTestDebug", "Данные о зарегистрированной метке успешно получены!")
                 }
+                sharedViewModel.setTag(response.body())
             }.join()
         }
 
@@ -175,17 +198,6 @@ class MainActivity : AppCompatActivity() {
 //                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
 //                }
 //            })
-    }
-
-    private fun getNFCSerialNumber(intent: Intent):String{
-        var serialNumber:String = ""
-        serialNumber = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)?.joinToString("") { "%02x".format(it) }?.uppercase().toString()
-        //var data = NFCHandler().processIntent(intent)
-        //showLog("NFCProjectTestDebug","tag: $data" )
-        return serialNumber
-    }
-    private fun getNFCSerialNumberAndDate(intent: Intent): Array<String>{
-        return arrayOf(getNFCSerialNumber(intent), NFCHandler().processIntent(intent))
     }
 
     //Возвращает информацию о паре
