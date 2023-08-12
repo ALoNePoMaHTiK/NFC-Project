@@ -36,4 +36,9 @@
     <string name="student_group">Группа: </string>
     <string name="ButtonUpdate">Обновить</string>
 
+    <string name="Profile">Профиль</string>
+    <string name="Schedule">Расписание</string>
+    <string name="Permissions">Разрешения</string>
+    <string name="NfcScanning">Отсканировать метку</string>
+
 </resources>

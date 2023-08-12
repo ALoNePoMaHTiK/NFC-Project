@@ -14,6 +14,7 @@
             android:id="@+id/action_authFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.nfcproject.MainFragment"
@@ -61,4 +62,9 @@
             android:id="@+id/action_waitingAccept_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/navigationMenu"
+        android:name="com.example.nfcproject.navigationMenu"
+        android:label="navigationMenu"
+        tools:layout="@layout/fragment_navigation_menu"/>
 </navigation>

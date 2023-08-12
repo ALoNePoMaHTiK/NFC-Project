@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/profile"
+        android:title="@string/Profile"
+    />
+    <item
+        android:id="@+id/schedule"
+        android:title="@string/Schedule"
+        />
+    <item
+        android:id="@+id/permissions"
+        android:title="@string/Permissions"
+        />
+    <item
+        android:id="@+id/nfc_scanning"
+        android:title="@string/NfcScanning"
+        />
+</menu>
