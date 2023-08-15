@@ -20,7 +20,7 @@ class navigationMenu : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val drawer = binding.navigdtionMenu
+        val drawer = binding.navigationMenu
         drawer.openDrawer(GravityCompat.START);
         super.onViewCreated(view, savedInstanceState)
     }

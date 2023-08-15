@@ -3,17 +3,21 @@
     <item
         android:id="@+id/profile"
         android:title="@string/Profile"
+        android:icon="@drawable/account_icon"
     />
     <item
         android:id="@+id/schedule"
         android:title="@string/Schedule"
+        android:icon="@drawable/schedule_icon"
         />
     <item
         android:id="@+id/permissions"
         android:title="@string/Permissions"
+        android:icon="@drawable/permissions_icon"
         />
     <item
         android:id="@+id/nfc_scanning"
         android:title="@string/NfcScanning"
+        android:icon="@drawable/nfc_sensor_icon"
         />
 </menu>

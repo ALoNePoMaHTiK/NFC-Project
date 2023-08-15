@@ -2,16 +2,14 @@
 
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigdtion_menu"
+    android:id="@+id/navigation_menu"
 
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:navGraph="@navigation/nav_graph"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:openDrawer="start"
-
-    >
+    tools:openDrawer="start">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -29,4 +27,6 @@
         >
 
     </com.google.android.material.navigation.NavigationView>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
