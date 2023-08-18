@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
         android:id="@+id/authFragment"
@@ -62,9 +62,4 @@
             android:id="@+id/action_waitingAccept_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/navigationMenu"
-        android:name="com.example.nfcproject.navigationMenu"
-        android:label="navigationMenu"
-        tools:layout="@layout/fragment_navigation_menu"/>
 </navigation>
