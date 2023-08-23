@@ -1,6 +1,6 @@
-package com.example.nfcproject
+package com.example.nfcproject.UI
 
-import RetrofitHelper
+import com.example.nfcproject.Hendlers.RetrofitHelper
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,10 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.nfcproject.Hendlers.DBConnection
+import com.example.nfcproject.R
+import com.example.nfcproject.Hendlers.StudentDataStorage
+import com.example.nfcproject.Hendlers.UserDataStorage
 import com.example.nfcproject.databinding.FragmentStartBinding
-import com.example.nfcproject.model.APIModels.AuthData
+import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
+import com.example.nfcproject.services.DBAPI
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -40,7 +45,7 @@ class StartFragment : Fragment() {
         findNavController().navigate(R.id.action_startFragment_to_authFragment)
     }
     private fun goToMainFragment(){
-        findNavController().navigate(R.id.action_startFragment_to_mainFragment)
+        findNavController().navigate(R.id.action_startFragment_to_profile)
     }
 
     private fun Navigate(){

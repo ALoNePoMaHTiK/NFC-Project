@@ -1,5 +1,5 @@
 package com.example.nfcproject
-import RetrofitHelper
+import com.example.nfcproject.Hendlers.RetrofitHelper
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.nfc.NfcAdapter
@@ -8,13 +8,24 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.nfcproject.Hendlers.NFCHandler
 import com.example.nfcproject.databinding.ActivityMainBinding
-import com.example.nfcproject.model.APIModels.Checkout
-import com.example.nfcproject.model.APIModels.Lesson
-import com.example.nfcproject.model.APIModels.Tag
+import com.example.nfcproject.model.APIModels.DBAPI.Checkout
+import com.example.nfcproject.model.APIModels.DBAPI.Lesson
+import com.example.nfcproject.model.APIModels.DBAPI.Tag
+import com.example.nfcproject.model.APIModels.VisitingAPI.Visiting
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
+import com.example.nfcproject.services.DBAPI
+import com.example.nfcproject.services.VisitingAPI
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -45,12 +56,35 @@ class MainActivity : AppCompatActivity() {
     private val sharedViewModel: MainViewModel by viewModels()
     private val studentViewModel: StudentViewModel by viewModels()
     private val journalViewModel: JournalViewModel by viewModels()
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
 
+        drawerLayout = binding.drawerLayout
+        // прячем drawer
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+        setSupportActionBar(binding.appBarMain.toolbar)
+        // у toolbar в свойствах выставлено - invisible
+
+        val navView: NavigationView = binding.navView
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.profile, R.id.schedule, R.id.permissions, R.id.nfc_scanning
+            ), drawerLayout
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
     override fun onResume() {
         super.onResume()
         if (getCurrentLessonTime().first != journalViewModel.timeStartLesson.value)
@@ -78,7 +112,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("NFCProjectTestDebug","New Intent")
         if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
             readNFC(intent)
-            
         }
     }
 
@@ -93,12 +126,14 @@ class MainActivity : AppCompatActivity() {
          }
          else{
              if (sharedViewModel.tag.value!!.note == nfcData.oldNote){
-                 sharedViewModel.setTag(Tag(
+                 sharedViewModel.setTag(
+                     Tag(
                      sharedViewModel.tag.value!!.tagId,
                      sharedViewModel.tag.value!!.placementDateTime,
                      sharedViewModel.tag.value!!.roomId,
                      nfcData.newNote,
-                     sharedViewModel.tag.value!!.isActive))
+                     sharedViewModel.tag.value!!.isActive)
+                 )
                  setNewNote()
                  addCheckout()
              }

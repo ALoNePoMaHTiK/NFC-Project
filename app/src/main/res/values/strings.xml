@@ -41,4 +41,8 @@
     <string name="Permissions">Разрешения</string>
     <string name="NfcScanning">Отсканировать метку</string>
 
+    <string name="patronymic">Отчество</string>
+    <string name="role">Роль</string>
+    <string name="group_num">Номер группы</string>
+
 </resources>

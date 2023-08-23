@@ -1,4 +1,4 @@
-package com.example.nfcproject
+package com.example.nfcproject.model.APIModels.VisitingAPI
 
 data class Visiting(
     val startAt:String,

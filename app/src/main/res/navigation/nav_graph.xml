@@ -3,49 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/startFragment">
 
     <fragment
         android:id="@+id/authFragment"
-        android:name="com.example.nfcproject.AuthFragment"
+        android:name="com.example.nfcproject.UI.AuthFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_auth" >
-        <action
-            android:id="@+id/action_authFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_auth" />
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.nfcproject.MainFragment"
-        android:label="fragment_data_send"
-        tools:layout="@layout/fragment_main" />
-    <fragment
         android:id="@+id/startFragment"
-        android:name="com.example.nfcproject.StartFragment"
+        android:name="com.example.nfcproject.UI.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start" >
         <action
             android:id="@+id/action_startFragment_to_authFragment"
             app:destination="@id/authFragment" />
         <action
-            android:id="@+id/action_startFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-        <action
             android:id="@+id/action_startFragment_to_student_singIn"
             app:destination="@id/student_singIn" />
         <action
             android:id="@+id/action_startFragment_to_waitingAccept"
             app:destination="@id/waitingAccept" />
+        <action
+            android:id="@+id/action_startFragment_to_profile"
+            app:destination="@id/profile" />
     </fragment>
     <fragment
         android:id="@+id/studentAuth"
-        android:name="com.example.nfcproject.StudentAuth"
+        android:name="com.example.nfcproject.UI.StudentAuth"
         android:label="fragment_student_auth"
         tools:layout="@layout/fragment_student_auth" />
     <fragment
         android:id="@+id/student_singIn"
-        android:name="com.example.nfcproject.student_singIn"
+        android:name="com.example.nfcproject.UI.student_singIn"
         android:label="student_singIn"
         tools:layout="@layout/fragment_student_sing_in"
         >
@@ -55,11 +46,30 @@
     </fragment>
     <fragment
         android:id="@+id/waitingAccept"
-        android:name="com.example.nfcproject.WaitingAccept"
+        android:name="com.example.nfcproject.UI.WaitingAccept"
         android:label="WaitingAccept"
         tools:layout="@layout/fragment_waiting_accept">
         <action
-            android:id="@+id/action_waitingAccept_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            android:id="@+id/action_waitingAccept_to_profile"
+            app:destination="@id/profile" />
     </fragment>
+    <fragment
+        android:id="@+id/nfc_scanning"
+        android:name="com.example.nfcproject.UI.NFC_scanning"
+        android:label="@string/NfcScanning" />
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.nfcproject.UI.Profile"
+        android:label="@string/Profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/permissions"
+        android:name="com.example.nfcproject.UI.Permissions"
+        android:label="@string/Permissions"
+        tools:layout="@layout/fragment_permissions" />
+    <fragment
+        android:id="@+id/schedule"
+        android:name="com.example.nfcproject.UI.Schedule"
+        android:label="@string/Schedule"
+        tools:layout="@layout/fragment_schedule" />
 </navigation>

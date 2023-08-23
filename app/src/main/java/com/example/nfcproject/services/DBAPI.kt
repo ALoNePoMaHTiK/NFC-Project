@@ -1,8 +1,8 @@
-package com.example.nfcproject
-import com.example.nfcproject.model.APIModels.AuthData
-import com.example.nfcproject.model.APIModels.Checkout
-import com.example.nfcproject.model.APIModels.Student
-import com.example.nfcproject.model.APIModels.Tag
+package com.example.nfcproject.services
+import com.example.nfcproject.model.APIModels.DBAPI.AuthData
+import com.example.nfcproject.model.APIModels.DBAPI.Checkout
+import com.example.nfcproject.model.APIModels.DBAPI.Student
+import com.example.nfcproject.model.APIModels.DBAPI.Tag
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response

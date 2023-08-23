@@ -1,24 +1,27 @@
-package com.example.nfcproject
+package com.example.nfcproject.Hendlers
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.provider.ContactsContract.Data
 
-class UserDataStorage(context: Context) {
+class StudentDataStorage(context: Context) {
 
     enum class Prefs(val text:String){
-        USER_PASSWORD("UserPassword"),
-        USER_LOGIN("UserLogin"),
-        USER_CARD_ID("UserCardId")
+        PASSWORD("password"),
+        EMAIL("email"),
+        STUDENT_ID("studentId"),
+        USER_ID("userId"),
+        GROUP_ID("groupId"),
+        IS_ACCEPTED("isAccepted"),
+        IS_ACCEPT_REQUESTED("isAcceptRequested"),
     }
     private var context = context
-    private val USER_DATA = "UserData"
+    private val Path = "StudentData"
 
     private fun getSharedPrefs() : SharedPreferences{
-        return context?.getSharedPreferences(USER_DATA, Context.MODE_PRIVATE) as SharedPreferences
+        return context?.getSharedPreferences(Path, Context.MODE_PRIVATE) as SharedPreferences
     }
 
-    fun getPref(pref:Prefs):String{
+    fun getPref(pref: Prefs):String{
         val prefs = getSharedPrefs()
         if (prefs.contains(pref.text)) {
             return prefs.getString(pref.text,"").toString()
@@ -26,14 +29,14 @@ class UserDataStorage(context: Context) {
         return ""
     }
 
-    fun setPref(pref:Prefs,data:String){
+    fun setPref(pref: Prefs, data:String){
         val prefs = getSharedPrefs()
         val prefsEdit = prefs.edit()
         prefsEdit.putString(pref.text,data)
         prefsEdit.commit()
     }
 
-    fun contains(pref:Prefs):Boolean{
+    fun contains(pref: Prefs):Boolean{
         val prefs = getSharedPrefs()
         return prefs.contains(pref.text)
     }

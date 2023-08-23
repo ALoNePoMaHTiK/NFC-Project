@@ -2,7 +2,6 @@ package com.example.nfcproject.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nfcproject.model.APIModels.Tag
 
 class StudentViewModel : ViewModel() {
 

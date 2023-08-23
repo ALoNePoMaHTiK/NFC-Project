@@ -3,7 +3,7 @@ package com.example.nfcproject.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.nfcproject.model.APIModels.Tag
+import com.example.nfcproject.model.APIModels.DBAPI.Tag
 
 class MainViewModel : ViewModel() {
 

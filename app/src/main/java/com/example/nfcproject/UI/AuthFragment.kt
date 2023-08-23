@@ -1,4 +1,4 @@
-package com.example.nfcproject
+package com.example.nfcproject.UI
 
 import android.content.Context
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import com.example.nfcproject.Hendlers.DBConnection
+import com.example.nfcproject.Hendlers.UserDataStorage
 import com.example.nfcproject.databinding.FragmentAuthBinding
 import com.example.nfcproject.model.MainViewModel
-import java.sql.ResultSet
 
 class AuthFragment : Fragment() {
 
@@ -44,7 +44,7 @@ class AuthFragment : Fragment() {
             if(saveDataToDB()){
                 sendDataViewModel()
                 savePreferences()
-                findNavController().navigate(R.id.action_authFragment_to_mainFragment)
+                //findNavController().navigate(R.id.action_authFragment_to_mainFragment)
             }
        }
     }

@@ -1,6 +1,6 @@
-package com.example.nfcproject
+package com.example.nfcproject.UI
 
-import RetrofitHelper
+import com.example.nfcproject.Hendlers.RetrofitHelper
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,16 +11,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.nfcproject.R
+import com.example.nfcproject.Hendlers.StudentDataStorage
 import com.example.nfcproject.databinding.FragmentStudentSingInBinding
-import com.example.nfcproject.model.APIModels.AuthData
-import com.example.nfcproject.model.APIModels.Student
+import com.example.nfcproject.model.APIModels.DBAPI.AuthData
+import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.StudentViewModel
+import com.example.nfcproject.services.DBAPI
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class student_singIn : Fragment() {

@@ -1,4 +1,4 @@
-package com.example.nfcproject.model.APIModels
+package com.example.nfcproject.model.APIModels.DBAPI
 
 data class AuthData (
 val email:String,
