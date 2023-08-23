@@ -7,23 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.nfcproject.R
 import com.example.nfcproject.databinding.FragmentProfileBinding
 import com.example.nfcproject.model.APIModels.DBAPI.ProfileViewModel
+import com.example.nfcproject.model.StudentViewModel
 
 
 class Profile : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var sharedViewModel: ProfileViewModel
+    private val studentViewModel: StudentViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         binding = FragmentProfileBinding.inflate(inflater,container, false)
-        val root: View = binding!!.root
         sharedViewModel = ViewModelProvider(requireActivity()).get(ProfileViewModel::class.java)
         sharedViewModel.setStatus()
         sharedViewModel.text.observe(viewLifecycleOwner) {
@@ -34,7 +36,15 @@ class Profile : Fragment() {
                 }
             requireActivity().findViewById<Toolbar>(R.id.toolbar).setVisibility(View.VISIBLE)
         }
-        return root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
+            sviewModel = studentViewModel
+        }
     }
 
 
