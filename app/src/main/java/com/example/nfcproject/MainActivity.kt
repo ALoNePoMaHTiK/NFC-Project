@@ -109,20 +109,24 @@ class MainActivity : AppCompatActivity() {
 
      override fun onNewIntent(intent: Intent?){
         super.onNewIntent(intent)
-        Log.d("NFCProjectTestDebug","New Intent")
-        if (intent != null && sharedViewModel.stateNFC.value == true && intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED) {
+        showLog("New Intent")
+         if (intent != null && sharedViewModel.stateNFC.value == true && (intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED || intent.action == NfcAdapter.ACTION_TAG_DISCOVERED)) {
             readNFC(intent)
         }
     }
 
      fun readNFC(intent: Intent){
-         val nfcData = NFCHandler().processIntent(intent)
-         showLog("NFCProjectTestDebug","Серийный номер: ${nfcData.serialNumber}")
-         showLog("NFCProjectTestDebug","Старая запись: ${nfcData.oldNote}")
-         showLog("NFCProjectTestDebug","Новая запись: ${nfcData.newNote}")
+         val nfcData = NFCHandler().writeNewNote(intent)
+         if (nfcData == null){
+             showError("Не удалось считать метку")
+             return
+         }
+         showLog("Серийный номер: ${nfcData.serialNumber}")
+         showLog("Старая запись: ${nfcData.oldNote}")
+         showLog("Новая запись: ${nfcData.newNote}")
          getTag(nfcData.serialNumber)
          if(sharedViewModel.tag.value == null){
-             showLog("NFCProjectTestDebug","Данная метка (${nfcData.serialNumber}) не зарегистрированна!")
+             showLog("Данная метка (${nfcData.serialNumber}) не зарегистрированна!")
          }
          else{
              if (sharedViewModel.tag.value!!.note == nfcData.oldNote){
@@ -138,7 +142,7 @@ class MainActivity : AppCompatActivity() {
                  addCheckout()
              }
              else{
-                 showLog("NFCProjectTestDebug","Данная метка (${nfcData.serialNumber}) не актуальна!")
+                 showLog("Данная метка (${nfcData.serialNumber}) не актуальна!")
              }
          }
     }
@@ -148,14 +152,14 @@ class MainActivity : AppCompatActivity() {
         api.updateTag(sharedViewModel.tag.value!!)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
-                    showLog("NFCProjectTestDebug",call.request().toString())
+                    showLog("Проблема с подключением к API")
+                    showLog(call.request().toString())
                 }
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful)
-                        showLog("NFCProjectTestDebug","Метка успешно актуализирована!")
+                        showLog("Метка успешно актуализирована!")
                     if (response.code() == 404)
-                        showLog("NFCProjectTestDebug","Ошибка при попытке актуализации метки!")
+                        showLog("Ошибка при попытке актуализации метки!")
                 }
             })
     }
@@ -172,67 +176,31 @@ class MainActivity : AppCompatActivity() {
         api.CreateCheckout(checkout)
             .enqueue(object : Callback<Checkout> {
                 override fun onFailure(call: Call<Checkout>, t: Throwable) {
-                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
-                    showLog("NFCProjectTestDebug",call.request().toString())
-                    showLog("NFCProjectTestDebug",t.message.toString())
-                    showLog("NFCProjectTestDebug",t.localizedMessage)
+                    showLog("Проблема с подключением к API")
+                    showLog(call.request().toString())
                 }
                 override fun onResponse(call: Call<Checkout>, response: Response<Checkout>) {
                     if (response.isSuccessful) {
-                        showLog("NFCProjectTestDebug","Checkout успешно добавлен!")
+                        showLog("Checkout успешно добавлен!")
                     }
                     if (response.code() == 404) {
-                        showLog("NFCProjectTestDebug","Неверные данные об отметке")
+                        showLog("Неверные данные об отметке")
                     }
                 }
             })
-    }
-
-    private fun getTagByIdAndNote(tagId: String, note: String){
-        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
-        runBlocking {
-            launch {
-                val response = api.GetTagByIdAndNote(tagId, note)
-                if (response != null){
-                    showLog("NFCProjectTestDebug", response.body().toString())
-                    showLog("NFCProjectTestDebug","Данные отправлены")
-                    sharedViewModel.setTag(response.body())
-                }
-            }.join()
-        }
     }
 
     private fun getTag(tagId: String){
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         runBlocking {
             launch {
-                val response = api.GetTagById1(tagId)
+                val response = api.GetTagByIdSuspend(tagId)
                 if (response != null){
-                    showLog("NFCProjectTestDebug", "Данные о зарегистрированной метке успешно получены!")
+                    showLog("Данные о зарегистрированной метке успешно получены!")
                 }
                 sharedViewModel.setTag(response.body())
             }.join()
         }
-
-
-//        api.GetTagById(tagId)
-//            .enqueue(object : Callback<Tag> {
-//                override fun onFailure(call: Call<Tag>, t: Throwable) {
-//                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
-//                    showLog("NFCProjectTestDebug",call.request().toString())
-//                }
-//                override fun onResponse(call: Call<Tag>, response: Response<Tag>) {
-//                    if (response.isSuccessful) {
-//                        showLog("NFCProjectTestDebug","Success")
-//                        sharedViewModel.setTag(response.body()!!)
-//                    }
-//                    if (response.code() == 404) {
-//                        showLog("NFCProjectTestDebug","Метка не найдена")
-//                        sharedViewModel.setTag(null)
-//                    }
-//                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
-//                }
-//            })
     }
 
     //Возвращает информацию о паре
@@ -250,7 +218,7 @@ class MainActivity : AppCompatActivity() {
             val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
             visitingApi.getLesson(lessonTime.first,lessonTime.second,currentDate).enqueue(object : Callback<Lesson> {
                 override fun onFailure(call: Call<Lesson>, t: Throwable) {
-                    showError("NFCProjectTestDebug","Не получилось получить данные о паре!")
+                    showError("Не получилось получить данные о паре!")
                 }
                 override fun onResponse(call: Call<Lesson>, response: Response<Lesson>) {
                     if (response.isSuccessful) {
@@ -261,13 +229,13 @@ class MainActivity : AppCompatActivity() {
                         journalViewModel.resetData()
                         journalViewModel.setTextMessage(Statuses["None"].toString())
                     }
-                    showLog("NFCProjectTestDebug","Код ответа : " + response.code().toString())
+                    showLog("Код ответа : " + response.code().toString())
                 }
             })
         }
     }
 
-     fun sendToTimeTable() = runBlocking {
+    fun sendToTimeTable() = runBlocking {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -284,33 +252,33 @@ class MainActivity : AppCompatActivity() {
                 "НФЦГ-01-22"
             )
 
-            showLog("NFCProjectTestDebug",sharedViewModel.studentCardId.value.toString())
-            showLog("NFCProjectTestDebug",lessonTime.first)
-            showLog("NFCProjectTestDebug",lessonTime.second)
-            showLog("NFCProjectTestDebug",currentDate)
-            showLog("NFCProjectTestDebug","НФЦГ-01-22")
+            showLog(sharedViewModel.studentCardId.value.toString())
+            showLog(lessonTime.first)
+            showLog(lessonTime.second)
+            showLog(currentDate)
+            showLog("НФЦГ-01-22")
             //TODO Добавить корутину
             visitingApi.setVisitingByStudentId(sharedViewModel.studentCardId.value.toString(), body)
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
                         showMessage("Проблема с подключением к API")
-                        showError("NFCProjectTestDebug",t.message.toString())
+                        showError(t.message.toString())
                     }
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
                             journalViewModel.setTextMessage(Statuses["Success"].toString())
-                            showLog("NFCProjectTestDebug :","Success")
+                            showLog("Success")
                         }
                         if (response.code() == 404) {
                             showMessage("Вы уже были отмечены!")
                         }
-                        showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
+                        showLog("Код ответа : " + response?.code().toString())
                     }
                 })
         }
     }
 
     private fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
-    private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
-    private fun showError(tag: String, msg: String) = Log.e(tag, msg)
+    private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
+    private fun showError(msg: String) = Log.e("NFCProjectTestDebug", msg)
 }
