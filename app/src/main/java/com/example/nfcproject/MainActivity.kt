@@ -1,5 +1,5 @@
 package com.example.nfcproject
-import com.example.nfcproject.Hendlers.RetrofitHelper
+import com.example.nfcproject.Handlers.RetrofitHelper
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.nfc.NfcAdapter
@@ -14,7 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.nfcproject.Hendlers.NFCHandler
+import com.example.nfcproject.Handlers.NFCHandler
 import com.example.nfcproject.databinding.ActivityMainBinding
 import com.example.nfcproject.model.APIModels.DBAPI.Checkout
 import com.example.nfcproject.model.APIModels.DBAPI.Lesson
@@ -23,8 +23,8 @@ import com.example.nfcproject.model.APIModels.VisitingAPI.Visiting
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
-import com.example.nfcproject.services.DBAPI
-import com.example.nfcproject.services.VisitingAPI
+import com.example.nfcproject.Services.DBAPI
+import com.example.nfcproject.Services.VisitingAPI
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

@@ -1,4 +1,4 @@
-package com.example.nfcproject.services
+package com.example.nfcproject.Services
 import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.APIModels.DBAPI.Checkout
 import com.example.nfcproject.model.APIModels.DBAPI.Student
