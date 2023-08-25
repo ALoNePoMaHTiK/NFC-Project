@@ -1,20 +1,24 @@
-package com.example.nfcproject.Hendlers
+package com.example.nfcproject.Handlers
 
 import android.content.Context
 import android.content.SharedPreferences
 
-class UserDataStorage(context: Context) {
+class StudentDataStorage(context: Context) {
 
     enum class Prefs(val text:String){
-        USER_PASSWORD("UserPassword"),
-        USER_LOGIN("UserLogin"),
-        USER_CARD_ID("UserCardId")
+        PASSWORD("password"),
+        EMAIL("email"),
+        STUDENT_ID("studentId"),
+        USER_ID("userId"),
+        GROUP_ID("groupId"),
+        IS_ACCEPTED("isAccepted"),
+        IS_ACCEPT_REQUESTED("isAcceptRequested"),
     }
     private var context = context
-    private val USER_DATA = "UserData"
+    private val Path = "StudentData"
 
     private fun getSharedPrefs() : SharedPreferences{
-        return context?.getSharedPreferences(USER_DATA, Context.MODE_PRIVATE) as SharedPreferences
+        return context?.getSharedPreferences(Path, Context.MODE_PRIVATE) as SharedPreferences
     }
 
     fun getPref(pref: Prefs):String{

@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.example.nfcproject.Hendlers.DBConnection
-import com.example.nfcproject.Hendlers.UserDataStorage
+import com.example.nfcproject.Handlers.DBConnection
+import com.example.nfcproject.Handlers.UserDataStorage
 import com.example.nfcproject.databinding.FragmentAuthBinding
 import com.example.nfcproject.model.MainViewModel
 

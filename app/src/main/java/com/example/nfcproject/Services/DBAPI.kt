@@ -1,4 +1,4 @@
-package com.example.nfcproject.services
+package com.example.nfcproject.Services
 import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.APIModels.DBAPI.Checkout
 import com.example.nfcproject.model.APIModels.DBAPI.Student
@@ -34,7 +34,7 @@ interface DBAPI {
 
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @GET("Tags/{tagId}")
-    suspend fun GetTagById1(@Path(value = "tagId", encoded = false) tagId: String) : Response<Tag>
+    suspend fun GetTagByIdSuspend(@Path(value = "tagId", encoded = false) tagId: String) : Response<Tag>
 
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @GET("Tags/{tagId}/{note}")
@@ -44,8 +44,4 @@ interface DBAPI {
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @POST("Checkouts")
     fun CreateCheckout(@Body checkout: Checkout): Call<Checkout>
-
-    @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
-    @POST("Checkouts")
-    fun CreateCheckout1(@Body checkout: Checkout): Response<Checkout>
 }

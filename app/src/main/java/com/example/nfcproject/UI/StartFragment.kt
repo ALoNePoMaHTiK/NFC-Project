@@ -1,6 +1,6 @@
 package com.example.nfcproject.UI
 
-import com.example.nfcproject.Hendlers.RetrofitHelper
+import com.example.nfcproject.Handlers.RetrofitHelper
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.nfcproject.Hendlers.DBConnection
+import com.example.nfcproject.Handlers.DBConnection
 import com.example.nfcproject.R
-import com.example.nfcproject.Hendlers.StudentDataStorage
-import com.example.nfcproject.Hendlers.UserDataStorage
+import com.example.nfcproject.Handlers.StudentDataStorage
+import com.example.nfcproject.Handlers.UserDataStorage
 import com.example.nfcproject.databinding.FragmentStartBinding
 import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
-import com.example.nfcproject.services.DBAPI
+import com.example.nfcproject.Services.DBAPI
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
