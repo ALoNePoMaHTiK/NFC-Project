@@ -49,6 +49,7 @@ class StartFragment : Fragment() {
     }
 
     private fun Navigate(){
+
         var sds = StudentDataStorage(context as Context)
         if(sds.contains(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED)){
             studentViewModel.setStudent(
