@@ -10,12 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.nfcproject.Handlers.StudentDataStorage
+import com.example.nfcproject.Handlers.Workers.WaitingAcceptWorker
 import com.example.nfcproject.R
 import com.example.nfcproject.databinding.FragmentWaitingAcceptBinding
 import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.StudentViewModel
 import com.example.nfcproject.Services.DBAPI
+import com.example.nfcproject.model.APIModels.DBAPI.AuthData
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,46 +45,36 @@ class WaitingAccept : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             sviewModel = studentViewModel
         }
-        binding.UpdateButton.setOnClickListener { resetStudent()
-        if (studentViewModel.isAccepted.value!!){
+        val proc3 = OneTimeWorkRequestBuilder<WaitingAcceptWorker>().addTag("song").build()
+        WorkManager.getInstance(requireContext()).enqueue(proc3)
+        binding.UpdateButton.setOnClickListener {
+        if (resetStudent()){
+            chageStudentState()
             goToMainFragment()
         }}
     }
 
-    fun resetStudent(){
+    fun resetStudent() : Boolean{
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
-        api.GetStudentById(studentViewModel.studentId.value.toString())
-            .enqueue(object : Callback<Student> {
-                override fun onFailure(call: Call<Student>, t: Throwable) {
-                    showLog("NFCProjectTestDebug","Проблема с подключением к API")
-                    showLog("NFCProjectTestDebug",call.request().toString())
-                    showLog("NFCProjectTestDebug",t.message.toString())
-                    showLog("NFCProjectTestDebug",t.localizedMessage)
-                }
-                override fun onResponse(call: Call<Student>, response: Response<Student>) {
-                    if (response.isSuccessful) {
-                        showLog("NFCProjectTestDebug","Success")
-                        studentViewModel.setStudent(
-                            response.body()?.email.toString(),
-                            response.body()?.password.toString(),
-                            response.body()?.userId!!.toInt(),
-                            response.body()?.groupId.toString(),
-                            response.body()?.studentId.toString(),
-                            response.body()?.isAccepted!!,
-                            response.body()?.isAcceptRequested!!
-                        )
-                        saveStudentData()
-                    }
-                    if (response.code() == 404) {
-                        showLog("NFCProjectTestDebug :","Неверные данные")
-                    }
-                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
-                }
-            })
+        var result = false
+        runBlocking{
+            GlobalScope.launch {
+                var result1 = api.GetStudentByIdSuspend(studentViewModel.studentId.value.toString())
+                if (result1.isSuccessful)
+                    result = result1.body()?.isAccepted!!
+            }.join()
+        }
+        return result
     }
 
     private fun goToMainFragment(){
         findNavController().navigate(R.id.action_waitingAccept_to_profile)
+    }
+
+    private fun chageStudentState(){
+        studentViewModel.setIsAccepted(true)
+        studentViewModel.setIsAcceptRequested(false)
+        saveStudentData()
     }
 
     private fun saveStudentData(){
@@ -90,5 +87,5 @@ class WaitingAccept : Fragment() {
         sds.setPref(StudentDataStorage.Prefs.IS_ACCEPTED,studentViewModel.isAccepted.value.toString())
         sds.setPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED,studentViewModel.isAcceptRequested.value.toString())
     }
-    private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
+    private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
 }

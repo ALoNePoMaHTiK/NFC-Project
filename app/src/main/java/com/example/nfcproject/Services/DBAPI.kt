@@ -3,6 +3,7 @@ import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.APIModels.DBAPI.Checkout
 import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.APIModels.DBAPI.Tag
+import com.example.nfcproject.model.APIModels.DBAPI.User
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -13,8 +14,16 @@ interface DBAPI {
     fun Auth(@Body student: AuthData): Call<Student>
 
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
+    @POST("Students/Auth")
+    suspend fun AuthSuspend(@Body student: AuthData): Response<Student>
+
+    @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @GET("Students/{studentId}")
     fun GetStudentById(@Path(value = "studentId", encoded = false) studentId: String): Call<Student>
+
+    @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
+    @GET("Students/{studentId}")
+    suspend fun GetStudentByIdSuspend(@Path(value = "studentId", encoded = false) studentId: String): Response<Student>
 
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @POST("Students/CheckAuth")
@@ -44,4 +53,8 @@ interface DBAPI {
     @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
     @POST("Checkouts")
     fun CreateCheckout(@Body checkout: Checkout): Call<Checkout>
+
+    @Headers("X-API-KEY:ed3ffe03-5501-476b-9791-e82d54027cb3")
+    @GET("Users/{userId}")
+    suspend fun GetUserById(@Path (value = "userId", encoded = false) userId: Int): Response<User>
 }

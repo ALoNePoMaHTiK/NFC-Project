@@ -18,9 +18,15 @@ import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.StudentViewModel
 import com.example.nfcproject.Services.DBAPI
+import com.example.nfcproject.model.APIModels.DBAPI.User
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.concurrent.thread
 
 
 class student_singIn : Fragment() {
@@ -60,7 +66,42 @@ class student_singIn : Fragment() {
             showMessage("Введен не корректный адрес пароль")
             return
         }
-        callAPI(AuthData(email,password))
+        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
+        var student = Student()
+        var user= User()
+        var isSuccess = false
+        runBlocking {
+            GlobalScope.launch {
+                var result1 = api.AuthSuspend(AuthData(email,password))
+                var result2 = api.GetUserById(result1.body()!!.userId)
+                showLog("Student = " + result1.body().toString())
+                showLog("User = " + result2.body().toString())
+                if (result2.isSuccessful && result1.isSuccessful){
+                    isSuccess = true
+                    student = result1.body()!!
+                    user = result2.body()!!
+                }
+            }.join()
+        }
+
+        if (isSuccess){
+            studentViewModel.setStudent(
+                student.email,
+                student.password,
+                student.userId,
+                student.groupId,
+                student.studentId,
+                student.isAccepted,
+                student.isAcceptRequested,
+                user.name
+            )
+            saveStudentData()
+            goToWaitingAccept()
+        }
+        else{
+            showMessage("Пользователь не найден")
+            showLog("Пользователь не найден")
+        }
     }
     private fun checkingCoorrectString(string: String, minLength: Int ): Boolean{
         return !string.isNullOrEmpty() && string.length >= minLength
@@ -80,39 +121,39 @@ class student_singIn : Fragment() {
     private fun callAPI(authData: AuthData){
 
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
-        api.Auth(authData)
-            .enqueue(object : Callback<Student> {
-                override fun onFailure(call: Call<Student>, t: Throwable) {
-                    showLog("NFCProjectTestDebug :","Проблема с подключением к API")
-                    showLog("NFCProjectTestDebug :",call.request().toString())
-                    showLog("NFCProjectTestDebug :",t.message.toString())
-                    showLog("NFCProjectTestDebug :",t.localizedMessage)
-                }
-                override fun onResponse(call: Call<Student>, response: Response<Student>) {
-                    if (response.isSuccessful) {
-                        showLog("NFCProjectTestDebug :","Success")
-                        studentViewModel.setStudent(
-                            response.body()?.email.toString(),
-                            response.body()?.password.toString(),
-                            response.body()?.userId!!.toInt(),
-                            response.body()?.groupId.toString(),
-                            response.body()?.studentId.toString(),
-                            response.body()?.isAccepted!!,
-                            response.body()?.isAcceptRequested!!
-                        )
-                        saveStudentData()
-                        goToWaitingAccept()
-                    }
-                    if (response.code() == 404) {
-                        showMessage("Неправильно введен логин / пароль")
-                        showLog("NFCProjectTestDebug :","Неверные данные")
-                    }
-                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
-                }
-            })
+//        api.Auth(authData)
+//            .enqueue(object : Callback<Student> {
+//                override fun onFailure(call: Call<Student>, t: Throwable) {
+//                    showLog("NFCProjectTestDebug :","Проблема с подключением к API")
+//                    showLog("NFCProjectTestDebug :",call.request().toString())
+//                    showLog("NFCProjectTestDebug :",t.message.toString())
+//                    showLog("NFCProjectTestDebug :",t.localizedMessage)
+//                }
+//                override fun onResponse(call: Call<Student>, response: Response<Student>) {
+//                    if (response.isSuccessful) {
+//                        showLog("NFCProjectTestDebug :","Success")
+//                        studentViewModel.setStudent(
+//                            response.body()?.email.toString(),
+//                            response.body()?.password.toString(),
+//                            response.body()?.userId!!.toInt(),
+//                            response.body()?.groupId.toString(),
+//                            response.body()?.studentId.toString(),
+//                            response.body()?.isAccepted!!,
+//                            response.body()?.isAcceptRequested!!
+//                        )
+//                        saveStudentData()
+//                        goToWaitingAccept()
+//                    }
+//                    if (response.code() == 404) {
+//                        showMessage("Неправильно введен логин / пароль")
+//                        showLog("NFCProjectTestDebug :","Неверные данные")
+//                    }
+//                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
+//                }
+//            })
     }
 
-    private fun showLog(tag: String, msg: String) = Log.d(tag, msg)
+    private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
 
     private fun saveStudentData(){
         var sds = StudentDataStorage(context as Context)
@@ -123,6 +164,7 @@ class student_singIn : Fragment() {
         sds.setPref(StudentDataStorage.Prefs.GROUP_ID,studentViewModel.groupId.value.toString())
         sds.setPref(StudentDataStorage.Prefs.IS_ACCEPTED,studentViewModel.isAccepted.value.toString())
         sds.setPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED,studentViewModel.isAcceptRequested.value.toString())
+        sds.setPref(StudentDataStorage.Prefs.USER_FULL_NAME,studentViewModel.userFullName.value.toString())
     }
 
     private fun goToWaitingAccept(){

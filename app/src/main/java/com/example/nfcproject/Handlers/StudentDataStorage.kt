@@ -13,6 +13,7 @@ class StudentDataStorage(context: Context) {
         GROUP_ID("groupId"),
         IS_ACCEPTED("isAccepted"),
         IS_ACCEPT_REQUESTED("isAcceptRequested"),
+        USER_FULL_NAME("userFullName")
     }
     private var context = context
     private val Path = "StudentData"

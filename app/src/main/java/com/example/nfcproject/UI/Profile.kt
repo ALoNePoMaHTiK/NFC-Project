@@ -9,10 +9,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.nfcproject.Handlers.WaitingAcceptWorker
+import com.example.nfcproject.Handlers.Workers.WaitingAcceptWorker
 import com.example.nfcproject.R
 import com.example.nfcproject.databinding.FragmentProfileBinding
 import com.example.nfcproject.model.APIModels.DBAPI.ProfileViewModel
@@ -50,8 +49,6 @@ class Profile : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             sviewModel = studentViewModel
         }
-        val proc3 = PeriodicWorkRequestBuilder<WaitingAcceptWorker>(3,TimeUnit.MINUTES).addTag("song").build()
-        WorkManager.getInstance(requireContext()).enqueue(proc3)
     }
 
 

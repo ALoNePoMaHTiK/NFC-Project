@@ -26,6 +26,7 @@ import com.example.nfcproject.model.StudentViewModel
 import com.example.nfcproject.Services.DBAPI
 import com.example.nfcproject.Services.VisitingAPI
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -79,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

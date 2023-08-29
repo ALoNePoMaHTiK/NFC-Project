@@ -60,6 +60,7 @@ class StartFragment : Fragment() {
                 sds.getPref(StudentDataStorage.Prefs.STUDENT_ID),
                 sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean(),
                 sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean(),
+                sds.getPref(StudentDataStorage.Prefs.USER_FULL_NAME).toString(),
             )
             if(checkAuth()){
                 if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
@@ -72,7 +73,7 @@ class StartFragment : Fragment() {
             goToSignInFragment()
     }
 
-    //TODO добавить проверку isAccepted
+    //TODO использовать worker для последовательных запросов
     private fun checkAuth() : Boolean{
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         var result = false
@@ -117,7 +118,7 @@ class StartFragment : Fragment() {
     }
 
     private fun goToWaitingAcceptFragment(){
-        findNavController().navigate(R.id.action_student_singIn_to_waitingAccept)
+        findNavController().navigate(R.id.action_startFragment_to_waitingAccept)
     }
     private fun goToSignInFragment(){
         findNavController().navigate(R.id.action_startFragment_to_student_singIn)

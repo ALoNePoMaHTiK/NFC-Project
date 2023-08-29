@@ -40,7 +40,7 @@
                         android:inputType="text"
                         android:maxLines="1"
                         android:enabled="false"
-                        android:text="Фамилия"/>
+                        android:text="@{sviewModel.userFullName}"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
