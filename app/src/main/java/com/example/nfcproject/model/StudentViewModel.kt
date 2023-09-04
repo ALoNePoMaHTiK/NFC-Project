@@ -22,6 +22,14 @@ class StudentViewModel : ViewModel() {
     private val _userFullName = MutableLiveData<String>()
     val userFullName: LiveData<String> = _userFullName
 
+    private val _userFirstName = MutableLiveData<String>()
+    val userFirestName: LiveData<String> = _userFirstName
+    private val _userSecondName = MutableLiveData<String>()
+    val userSecondName: LiveData<String> = _userSecondName
+    private val _userPatronymic = MutableLiveData<String>()
+    val userPatronymic: LiveData<String> = _userPatronymic
+
+
     fun setStudentEmail(email: String) {_email.value = email}
     fun setStudentPassword(password: String) {_password.value = password }
     fun setUserId(userId: Int) {_userId.value = userId}
@@ -30,8 +38,13 @@ class StudentViewModel : ViewModel() {
     fun setIsAccepted(isAccepted: Boolean){ _isAccepted.value = isAccepted}
     fun setIsAcceptRequested(isAcceptRequested: Boolean){ _isAcceptRequested.value = isAcceptRequested}
     fun setUserFullName(userFullName: String){ _userFullName.value = userFullName}
+    private fun setUserFirestName(userFirestName: String){_userFirstName.value = userFirestName}
+    private fun setUserSecondName(userSecondName: String){_userSecondName.value = userSecondName}
+    private fun setUserPatronymic(userPatronymic: String){_userPatronymic.value = userPatronymic}
 
-    fun setStudent(email: String,password: String,userId: Int,groupId: String,studentId: String,isAccepted: Boolean,isAcceptRequested: Boolean,userFullName: String){
+    fun setStudent(email: String,password: String,userId: Int,groupId: String,
+                   studentId: String,isAccepted: Boolean,isAcceptRequested:
+                   Boolean,userFullName: String){
         setStudentEmail(email)
         setStudentPassword(password)
         setUserId(userId)
@@ -40,6 +53,9 @@ class StudentViewModel : ViewModel() {
         setIsAccepted(isAccepted)
         setIsAcceptRequested(isAcceptRequested)
         setUserFullName(userFullName)
+        val fio = userFullName.split(' ')
+        setUserFirestName(fio[0])
+        setUserSecondName(fio[1])
+        setUserPatronymic(fio[2])
     }
-
 }

@@ -40,7 +40,7 @@
                         android:inputType="text"
                         android:maxLines="1"
                         android:enabled="false"
-                        android:text="@{sviewModel.userFullName}"/>
+                        android:text="@{sviewModel.userFirestName}"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:enabled="false"
-                        android:text="Имя"
+                        android:text="@{sviewModel.userSecondName}"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:enabled="false"
-                        android:text="Отчество"
+                        android:text="@{sviewModel.userPatronymic}"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
