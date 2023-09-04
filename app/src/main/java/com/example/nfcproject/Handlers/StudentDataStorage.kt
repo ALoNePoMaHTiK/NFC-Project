@@ -41,4 +41,11 @@ class StudentDataStorage(context: Context) {
         val prefs = getSharedPrefs()
         return prefs.contains(pref.text)
     }
+
+    fun clear(pref: Prefs){
+        val prefs = getSharedPrefs()
+        val prefsEdit = prefs.edit()
+        prefsEdit.remove(pref.text)
+        prefsEdit.commit()
+    }
 }

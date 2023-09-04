@@ -60,13 +60,17 @@ class StartFragment : Fragment() {
                 sds.getPref(StudentDataStorage.Prefs.STUDENT_ID),
                 sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean(),
                 sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean(),
-                sds.getPref(StudentDataStorage.Prefs.USER_FULL_NAME).toString(),
+                sds.getPref(StudentDataStorage.Prefs.USER_FULL_NAME),
             )
             if(checkAuth()){
                 if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED).toBoolean())
                     goToWaitingAcceptFragment()
                 if(sds.getPref(StudentDataStorage.Prefs.IS_ACCEPTED).toBoolean())
                     goToMainFragment()
+            }
+            else{
+                clearSharedPreferenses()
+                goToSignInFragment()
             }
         }
         else
@@ -80,7 +84,14 @@ class StartFragment : Fragment() {
         runBlocking {
             launch {
                 val response = api.CheckAuth(AuthData(studentViewModel.email.value.toString(),studentViewModel.password.value.toString()))
-                if (response != null){
+                if (response != null &&
+                        response.body()?.email == studentViewModel.email.value &&
+                        response.body()?.password == studentViewModel.password.value &&
+                        response.body()?.groupId == studentViewModel.groupId.value &&
+                        response.body()?.userId == studentViewModel.userId.value &&
+                        response.body()?.isAccepted == studentViewModel.isAccepted.value &&
+                        response.body()?.isAcceptRequested == studentViewModel.isAcceptRequested.value
+                        ){
                     result = true
                 }
                 else{
@@ -111,6 +122,17 @@ class StartFragment : Fragment() {
         else{
             goToAuthFragment()
         }
+    }
+
+    private fun clearSharedPreferenses(){
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.STUDENT_ID)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.USER_FULL_NAME)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.EMAIL)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.GROUP_ID)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.USER_ID)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.IS_ACCEPTED)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED)
+        StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.PASSWORD)
     }
     private fun checkCredentials(StudentId: String, StudentLoginHash: String, StudentPasswordHash: String): Boolean{
         val credential = DBConnection().getStudentCredentials(StudentId)
