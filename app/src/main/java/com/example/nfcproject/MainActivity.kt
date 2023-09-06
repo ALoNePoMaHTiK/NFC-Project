@@ -5,9 +5,11 @@ import android.icu.text.SimpleDateFormat
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -78,8 +80,16 @@ class MainActivity : AppCompatActivity() {
                 R.id.profile, R.id.schedule, R.id.permissions, R.id.nfc_scanning
             ), drawerLayout
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        /*val headerTextView = findViewById<TextView>(R.id.Header)
+        val nameObserver = Observer<String> { newName ->
+            // Update the UI, in this case, a TextView.
+            headerTextView.text = newName
+        }
+        studentViewModel.userFirestName.observe(this, nameObserver)*/
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

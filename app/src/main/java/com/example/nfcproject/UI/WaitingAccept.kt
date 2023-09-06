@@ -57,7 +57,6 @@ class WaitingAccept : Fragment() {
             var result = false
             while(!result){
                 result = resetStudent()
-                showLog("Писька")
                 Thread.sleep(3000)
             }
             chageStudentState()
