@@ -20,12 +20,15 @@ import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.StudentViewModel
 import com.example.nfcproject.Services.DBAPI
 import com.example.nfcproject.model.APIModels.DBAPI.AuthData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.Dispatcher
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.concurrent.thread
 
 class WaitingAccept : Fragment() {
     private lateinit var binding: FragmentWaitingAcceptBinding
@@ -45,13 +48,21 @@ class WaitingAccept : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             sviewModel = studentViewModel
         }
-        val proc3 = OneTimeWorkRequestBuilder<WaitingAcceptWorker>().addTag("song").build()
-        WorkManager.getInstance(requireContext()).enqueue(proc3)
         binding.UpdateButton.setOnClickListener {
-        if (resetStudent()){
+            if (resetStudent()){
+                chageStudentState()
+                goToMainFragment()
+            }}
+        GlobalScope.launch (Dispatchers.Main) {
+            var result = false
+            while(!result){
+                result = resetStudent()
+                showLog("Писька")
+                Thread.sleep(3000)
+            }
             chageStudentState()
             goToMainFragment()
-        }}
+        }
     }
 
     fun resetStudent() : Boolean{
@@ -72,12 +83,19 @@ class WaitingAccept : Fragment() {
     }
 
     private fun chageStudentState(){
-        studentViewModel.setIsAccepted(true)
-        studentViewModel.setIsAcceptRequested(false)
+        showLog("chageStudentState")
+        try{
+            studentViewModel.setIsAccepted(true)
+            studentViewModel.setIsAcceptRequested(false)
+        }
+        catch(e:Exception){
+            showLog(e.stackTraceToString())
+        }
         saveStudentData()
     }
 
     private fun saveStudentData(){
+        showLog("saveStudentData")
         var sds = StudentDataStorage(context as Context)
         sds.setPref(StudentDataStorage.Prefs.STUDENT_ID,studentViewModel.studentId.value.toString())
         sds.setPref(StudentDataStorage.Prefs.PASSWORD,studentViewModel.password.value.toString())
