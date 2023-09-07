@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="sviewModel"
             type="com.example.nfcproject.model.StudentViewModel" />
     </data>
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".UI.Profile"
-        android:background="#75C0C0C0">
+        android:background="@color/BackgroungColor">
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -18,7 +19,6 @@
             android:paddingVertical="10dp"
             android:layout_marginVertical="30dp"
             android:layout_marginHorizontal="30dp">
-
             <LinearLayout
                 android:paddingTop="30dp"
                 android:paddingHorizontal="10dp"
@@ -30,65 +30,74 @@
                     style="@style/Widget.NFCProject.TextInputLayout"
                     android:id="@+id/lName_text_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/lNameHint">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/lName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
+                        android:enabled="false"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:enabled="false"
-                        android:text="@{sviewModel.userFirestName}"/>
+                        android:text="@{sviewModel.userFirestName}"
+                        android:textColor="@color/TextColor"
+                        android:background="@drawable/textviewshape"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
                     android:id="@+id/fName_text_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/fNameHint">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/fName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:background="@drawable/textviewshape"
                         android:enabled="false"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:text="@{sviewModel.userSecondName}"
-                        android:maxLines="1" />
+                        android:textColor="@color/TextColor"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
                     android:id="@+id/patronymic_text_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/patronymic">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/patronymic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:background="@drawable/textviewshape"
                         android:enabled="false"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:text="@{sviewModel.userPatronymic}"
-                        android:maxLines="1" />
+                        android:textColor="@color/TextColor"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/email_text_input"
                     style="@style/Widget.NFCProject.TextInputLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_email">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/email"
-                        android:enabled="false"
-                        android:text="@{sviewModel.email}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/textviewshape"
+                        android:enabled="false"
                         android:inputType="text"
-                        android:maxLines="1" />
+                        android:maxLines="2"
+                        android:text="@{sviewModel.email}"
+                        android:textColor="@color/TextColor"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
@@ -102,43 +111,47 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:text="Студент"
                         android:enabled="false"
+                        android:textColor="@color/TextColor"
+                        android:background="@drawable/textviewshape"
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
                     android:id="@+id/stud_num_text_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/studentID">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/stud_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:background="@drawable/textviewshape"
                         android:enabled="false"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:text="@{sviewModel.studentId}"
-                        android:maxLines="1" />
+                        android:textColor="@color/TextColor"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.NFCProject.TextInputLayout"
                     android:id="@+id/group_num_text_input"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/group_num">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/group_num"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:background="@drawable/textviewshape"
                         android:enabled="false"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:text="@{sviewModel.groupId}"
-                        android:maxLines="1" />
+                        android:textColor="@color/TextColor"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
-
             </LinearLayout>
         </ScrollView>
 

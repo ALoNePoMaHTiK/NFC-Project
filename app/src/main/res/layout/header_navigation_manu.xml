@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout   xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="40dp"
-    android:layout_marginBottom="90dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:background="@drawable/shape"
-    android:orientation="horizontal">
-    <TextView
-        android:id="@+id/Header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test"
-        android:textSize="24sp"
-        android:fontFamily="@font/roboto"
-        android:gravity="center"
-        />
 
-</LinearLayout>
+    android:background="@drawable/headershape"
+
+    android:orientation="horizontal">
+    <LinearLayout
+        android:layout_marginTop="90dp"
+        android:layout_marginBottom="140dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="34dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/shape">
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/HeaderFName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Имя"
+                android:textSize="17sp"
+                android:textColor="@color/TextColor"
+                android:fontFamily="@font/roboto"
+                />
+            <TextView
+                android:id="@+id/HeaderLName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Фамилия"
+                android:textSize="17sp"
+                android:textColor="@color/TextColor"
+                android:fontFamily="@font/roboto"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</RelativeLayout  >
