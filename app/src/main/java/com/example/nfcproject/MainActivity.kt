@@ -84,12 +84,15 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        /*val headerTextView = findViewById<TextView>(R.id.Header)
-        val nameObserver = Observer<String> { newName ->
+        val headerTextView = findViewById<TextView>(R.id.Header)
+      /*  val nameObserver = Observer<String> { newName ->
             // Update the UI, in this case, a TextView.
             headerTextView.text = newName
         }
-        studentViewModel.userFirestName.observe(this, nameObserver)*/
+       */
+        studentViewModel.userFirestName.observe(this){
+            headerTextView.text = it.toString()
+        }
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
