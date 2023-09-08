@@ -23,23 +23,16 @@
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
-            <TextView
-                android:id="@+id/helloLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="25dp"
-                android:padding="15dp"
-                android:text="@string/helloText"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/nameLesson"
+                android:layout_marginTop="56dp"
                 android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/TextColor"
                 android:text="@{@string/subject+jViewModel.nameLesson}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
@@ -50,6 +43,8 @@
                 android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/TextColor"
                 android:text="@{@string/start_time+jViewModel.timeStartLesson}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
@@ -60,6 +55,8 @@
                 android:paddingStart="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:textColor="@color/TextColor"
                 android:text="@{@string/end_time+jViewModel.timeEndtLesson}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
@@ -84,6 +81,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60dp"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/TextColor"
                     android:text="@{jViewModel.mes}"
                     android:textSize="24sp"
                     android:textStyle="bold"

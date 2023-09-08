@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/main_background"
+
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:background="@drawable/main_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
@@ -23,10 +24,12 @@
             app:srcCompat="@drawable/univ_logo" />
 
         <TextView
+            android:layout_marginVertical="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto"
             android:layout_marginBottom="10dp"
+            android:textColor="@color/TextColor"
             android:gravity="center"
             android:text="@string/label_SingIn"
             android:textSize="32dp"></TextView>
@@ -45,8 +48,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email"
+                    android:layout_marginBottom="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/textviewshape"
+                    android:fontFamily="@font/roboto"
+                    android:textColor="@color/TextColor"
                     android:inputType="text"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -64,6 +71,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text|textPassword"
+                    android:background="@drawable/textviewshape"
+                    android:textColor="@color/TextColor"
+                    android:fontFamily="@font/roboto"
+                    android:layout_marginBottom="16dp"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,12 +82,13 @@
                 android:layout_marginTop="10dp"
                 android:id="@+id/SingInButton"
                 style="@style/Widget.NFCProject.Button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"
-                android:text="@string/ButtonSingInLable"
+                android:textColor="#DDEFF3"
+                android:text="@string/label_SingIn"
                 app:backgroundTint="#3165A3"
                 app:cornerRadius="5dp" />
         </LinearLayout>

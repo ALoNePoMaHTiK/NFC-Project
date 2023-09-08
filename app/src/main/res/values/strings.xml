@@ -28,9 +28,8 @@
     <string name="hint_name_student">Name student</string>
 
     <string name="ButtonSingUpLable">Зарегистрироваться</string>
-    <string name="ButtonSingInLable">Войти</string>
-    <string name="label_SingIn">ВОЙТИ</string>
-    <string name="label_WaitingAccept">ДОЖДИТЕСЬ ПОДТВЕРЖДЕНИЯ АДМИНИСТРАТОРА</string>
+    <string name="label_SingIn">Войти</string>
+    <string name="label_WaitingAccept">Дождитсь подтверждения администратора</string>
     <string name="email">Email: </string>
     <string name="studentID">Номер студенчиского: </string>
     <string name="student_group">Группа: </string>
