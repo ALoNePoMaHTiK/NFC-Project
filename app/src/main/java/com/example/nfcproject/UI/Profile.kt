@@ -40,6 +40,7 @@ class Profile : Fragment() {
                 }
             requireActivity().findViewById<Toolbar>(R.id.toolbar).setVisibility(View.VISIBLE)
         }
+
         return binding.root
     }
 
