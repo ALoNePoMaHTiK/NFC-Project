@@ -53,15 +53,15 @@ class WaitingAccept : Fragment() {
                 chageStudentState()
                 goToMainFragment()
             }}
-        GlobalScope.launch (Dispatchers.Main) {
-            var result = false
-            while(!result){
-                result = resetStudent()
-                Thread.sleep(3000)
-            }
-            chageStudentState()
-            goToMainFragment()
-        }
+//        GlobalScope.launch (Dispatchers.Main) {
+//            var result = false
+//            while(!result){
+//                Thread.sleep(3000)
+//                result = resetStudent()
+//            }
+//            chageStudentState()
+//            goToMainFragment()
+//        }
     }
 
     fun resetStudent() : Boolean{

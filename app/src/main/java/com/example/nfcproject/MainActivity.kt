@@ -39,22 +39,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val LessonTimeTable = listOf(
-        Pair("9:00","10:30"),
-        Pair("10:40","12:10"),
-        Pair("12:40","14:10"),
-        Pair("14:20","15:50"),
-        Pair("16:20","17:50"),
-        Pair("18:00","19:30"),
-        Pair("19:40","21:00")
-    )
-
-    val Statuses = mapOf(
-        "Success" to "Вы успешно отмечены",
-        "Wait" to "Отсканируйте метку",
-        "None" to "Дождитесь начала пары"
-    )
-
     private lateinit var binding: ActivityMainBinding
     private val sharedViewModel: MainViewModel by viewModels()
     private val studentViewModel: StudentViewModel by viewModels()
@@ -93,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         studentViewModel.userSecondName.observe(this) {
             HeaderLNameTextView.text = it.toString()
         }
+        Auth()
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -100,24 +85,6 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onResume() {
         super.onResume()
-        if (getCurrentLessonTime().first != journalViewModel.timeStartLesson.value)
-            setCurrentLessonData()
-    }
-
-    //Возвращяется пара (Начало текущей пары, Конец текущей пары)
-    //Если текущее время не соотвествует ни одному времени пары, то возращается пустое значение Pair("","")
-    fun getCurrentLessonTime():Pair<String,String>{
-        var result:Pair<String,String> = Pair("","")
-        for(i in LessonTimeTable) {
-            val firstTime = SimpleDateFormat("HH:mm").parse(i.first).time
-            val secondTime = SimpleDateFormat("HH:mm").parse(i.second).time
-            val currentTime =
-                SimpleDateFormat("HH:mm").parse(SimpleDateFormat("HH:mm").format(Date())).time
-            if (firstTime < currentTime && currentTime < secondTime) {
-                result = i
-            }
-        }
-        return result
     }
 
      override fun onNewIntent(intent: Intent?){
@@ -128,7 +95,33 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-     fun readNFC(intent: Intent){
+    private fun Auth(){
+        val api = Retrofit.Builder().baseUrl("https://rtu-attends.rtu-tc.ru")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build().create(VisitingAPI::class.java)
+        api.Auth().enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    showLog("Проблема с подключением к API")
+                    showLog("Запрос : " + call.request())
+                }
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        showLog("Success")
+                        showLog(response.headers()["set-cookie"].toString())
+                        journalViewModel.setCookie(response.headers()["set-cookie"].toString())
+                    }
+                    else{
+                        showLog("Код ответа : " + response?.code().toString())
+                        showLog("Код ответа : " + response.raw())
+                        showLog("Код ответа : " + response.headers().toString())
+                    }
+
+                }
+            })
+    }
+
+    fun readNFC(intent: Intent){
          val nfcData = NFCHandler().writeNewNote(intent)
          if (nfcData == null){
              showError("Не удалось считать метку")
@@ -213,81 +206,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 sharedViewModel.setTag(response.body())
             }.join()
-        }
-    }
-
-    //Возвращает информацию о паре
-    //Если время отметки неподходящее
-    //Или пара отсутствует возвращяет пустой оъект Lesson
-    fun setCurrentLessonData() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
-        val visitingApi = retrofit.create(VisitingAPI::class.java)
-        //TODO Добавить корутину
-        val lessonTime = getCurrentLessonTime()
-        if (lessonTime != Pair("","")){
-            val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
-            visitingApi.getLesson(lessonTime.first,lessonTime.second,currentDate).enqueue(object : Callback<Lesson> {
-                override fun onFailure(call: Call<Lesson>, t: Throwable) {
-                    showError("Не получилось получить данные о паре!")
-                }
-                override fun onResponse(call: Call<Lesson>, response: Response<Lesson>) {
-                    if (response.isSuccessful) {
-                        journalViewModel.setLesson(response.body()?.disciplineName.toString(),response.body()?.startAt.toString(),response.body()?.finishAt.toString())
-                        journalViewModel.setTextMessage(Statuses["Wait"].toString())
-                    }
-                    if (response.code()==404){
-                        journalViewModel.resetData()
-                        journalViewModel.setTextMessage(Statuses["None"].toString())
-                    }
-                    showLog("Код ответа : " + response.code().toString())
-                }
-            })
-        }
-    }
-
-    fun sendToTimeTable() = runBlocking {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://mejs.api.adev-team.ru/attendance/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
-        val visitingApi = retrofit.create(VisitingAPI::class.java)
-
-        val lessonTime = getCurrentLessonTime()
-        if (lessonTime != Pair("","")) {
-            val currentDate = SimpleDateFormat("yyyy-MM-dd").format(Date())
-            val body = Visiting(
-                lessonTime.first,
-                lessonTime.second,
-                currentDate,
-                "НФЦГ-01-22"
-            )
-
-            showLog(sharedViewModel.studentCardId.value.toString())
-            showLog(lessonTime.first)
-            showLog(lessonTime.second)
-            showLog(currentDate)
-            showLog("НФЦГ-01-22")
-            //TODO Добавить корутину
-            visitingApi.setVisitingByStudentId(sharedViewModel.studentCardId.value.toString(), body)
-                .enqueue(object : Callback<String> {
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        showMessage("Проблема с подключением к API")
-                        showError(t.message.toString())
-                    }
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if (response.isSuccessful) {
-                            journalViewModel.setTextMessage(Statuses["Success"].toString())
-                            showLog("Success")
-                        }
-                        if (response.code() == 404) {
-                            showMessage("Вы уже были отмечены!")
-                        }
-                        showLog("Код ответа : " + response?.code().toString())
-                    }
-                })
         }
     }
 

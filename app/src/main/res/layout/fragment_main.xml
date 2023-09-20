@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:textColor="@color/TextColor"
-                android:text="@{@string/subject+jViewModel.nameLesson}"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:textColor="@color/TextColor"
-                android:text="@{@string/start_time+jViewModel.timeStartLesson}"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:textColor="@color/TextColor"
-                android:text="@{@string/end_time+jViewModel.timeEndtLesson}"
+                android:text=""
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -83,7 +83,7 @@
                     android:layout_marginTop="60dp"
                     android:fontFamily="@font/roboto"
                     android:textColor="@color/TextColor"
-                    android:text="@{jViewModel.mes}"
+                    android:text=""
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"

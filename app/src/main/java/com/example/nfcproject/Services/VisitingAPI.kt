@@ -6,11 +6,13 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface VisitingAPI {
-    @Headers("X-API-Token:5888EgsL2J4EYuDByQ2V63RFMF4z9r3H")
-    @POST("visiting/{StudentId}/student_id")
-    fun setVisitingByStudentId(@Path(value = "StudentId", encoded = false)StudentId:String, @Body visiting: Visiting): Call<String>
+    @Headers(
+        "human-id:00000000-0000-0000-0000-000000000001",
+        "User-Agent:insomnia/2023.5.8")
+    @GET("/debug-login")
+    fun Auth(): Call<Void>
 
-    @Headers("X-API-Token:5888EgsL2J4EYuDByQ2V63RFMF4z9r3H")
-    @GET("job/НФЦГ-01-22/journal")
-    fun getLesson(@Query("start_at") StartAt:String, @Query("finish_at") FinishAt:String, @Query("date") Date:String): Call<Lesson>
+    @GET("/rtu_tc.rtu_attend.app.UserService/GetMeInfo")
+    fun GetMeInfo():Call<String>
+
 }
