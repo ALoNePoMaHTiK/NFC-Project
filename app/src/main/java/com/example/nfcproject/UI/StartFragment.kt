@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.nfcproject.Handlers.DBConnection
 import com.example.nfcproject.R
 import com.example.nfcproject.Handlers.StudentDataStorage
 import com.example.nfcproject.Handlers.UserDataStorage
@@ -103,27 +102,6 @@ class StartFragment : Fragment() {
         return result
     }
 
-    private fun getAuth(){
-        if (UserDataStorage(context as Context).contains(UserDataStorage.Prefs.USER_CARD_ID)){
-            val StudentCardId = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_CARD_ID)
-            val StudentFName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_LOGIN)
-            val StudentLName = UserDataStorage(context as Context).getPref(UserDataStorage.Prefs.USER_PASSWORD)
-            if (checkCredentials(StudentCardId,StudentFName,StudentLName)) {
-                sharedViewModel.setStudentCardId(StudentCardId)
-                sharedViewModel.setStudentFName(StudentFName)
-                sharedViewModel.setStudentLName(StudentLName)
-                sharedViewModel.onNFC()
-                goToMainFragment()
-            }
-            else{
-                goToAuthFragment()
-            }
-        }
-        else{
-            goToAuthFragment()
-        }
-    }
-
     private fun clearSharedPreferenses(){
         StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.STUDENT_ID)
         StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.USER_FULL_NAME)
@@ -133,10 +111,6 @@ class StartFragment : Fragment() {
         StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.IS_ACCEPTED)
         StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.IS_ACCEPT_REQUESTED)
         StudentDataStorage(context as Context).clear(StudentDataStorage.Prefs.PASSWORD)
-    }
-    private fun checkCredentials(StudentId: String, StudentLoginHash: String, StudentPasswordHash: String): Boolean{
-        val credential = DBConnection().getStudentCredentials(StudentId)
-        return (credential[0] != "" && credential[0] == StudentLoginHash && credential[1] == StudentPasswordHash)
     }
 
     private fun goToWaitingAcceptFragment(){

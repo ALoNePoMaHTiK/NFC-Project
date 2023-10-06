@@ -10,25 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.example.nfcproject.Handlers.StudentDataStorage
-import com.example.nfcproject.Handlers.Workers.WaitingAcceptWorker
 import com.example.nfcproject.R
 import com.example.nfcproject.databinding.FragmentWaitingAcceptBinding
-import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.StudentViewModel
 import com.example.nfcproject.Services.DBAPI
-import com.example.nfcproject.model.APIModels.DBAPI.AuthData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.Dispatcher
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import kotlin.concurrent.thread
 
 class WaitingAccept : Fragment() {
     private lateinit var binding: FragmentWaitingAcceptBinding

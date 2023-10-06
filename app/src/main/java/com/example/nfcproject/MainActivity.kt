@@ -116,7 +116,6 @@ class MainActivity : AppCompatActivity() {
                         showLog("Код ответа : " + response.raw())
                         showLog("Код ответа : " + response.headers().toString())
                     }
-
                 }
             })
     }
