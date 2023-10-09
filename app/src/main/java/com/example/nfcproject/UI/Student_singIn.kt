@@ -118,41 +118,6 @@ class student_singIn : Fragment() {
     }
     private fun showMessage(message: String) = Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
 
-    private fun callAPI(authData: AuthData){
-
-        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
-//        api.Auth(authData)
-//            .enqueue(object : Callback<Student> {
-//                override fun onFailure(call: Call<Student>, t: Throwable) {
-//                    showLog("NFCProjectTestDebug :","Проблема с подключением к API")
-//                    showLog("NFCProjectTestDebug :",call.request().toString())
-//                    showLog("NFCProjectTestDebug :",t.message.toString())
-//                    showLog("NFCProjectTestDebug :",t.localizedMessage)
-//                }
-//                override fun onResponse(call: Call<Student>, response: Response<Student>) {
-//                    if (response.isSuccessful) {
-//                        showLog("NFCProjectTestDebug :","Success")
-//                        studentViewModel.setStudent(
-//                            response.body()?.email.toString(),
-//                            response.body()?.password.toString(),
-//                            response.body()?.userId!!.toInt(),
-//                            response.body()?.groupId.toString(),
-//                            response.body()?.studentId.toString(),
-//                            response.body()?.isAccepted!!,
-//                            response.body()?.isAcceptRequested!!
-//                        )
-//                        saveStudentData()
-//                        goToWaitingAccept()
-//                    }
-//                    if (response.code() == 404) {
-//                        showMessage("Неправильно введен логин / пароль")
-//                        showLog("NFCProjectTestDebug :","Неверные данные")
-//                    }
-//                    showLog("NFCProjectTestDebug","Код ответа : " + response?.code().toString())
-//                }
-//            })
-    }
-
     private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
 
     private fun saveStudentData(){

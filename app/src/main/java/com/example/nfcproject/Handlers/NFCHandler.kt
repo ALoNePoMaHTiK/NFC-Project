@@ -17,15 +17,15 @@ import kotlin.experimental.and
 
 class NFCHandler {
 
-    fun writeNewNote(intent: Intent) : IOData_NFC?{
+    fun writeNewNote(intent: Intent): IOData_NFC? {
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
         val needAuth = true
         var response = ByteArray(0)
         nfcA.connect()
-        if (needAuth){
-            val passwordBytes = byteArrayOf(0x31,0x32,0x33,0x34)    // 1234
-            val packBytes = byteArrayOf(0x4F,0x4B)                  // OK
+        if (needAuth) {
+            val passwordBytes = byteArrayOf(0x31, 0x32, 0x33, 0x34)    // 1234
+            val packBytes = byteArrayOf(0x4F, 0x4B)                  // OK
             var response = sendPwdAuthData(nfcA, passwordBytes)
             if (response == null) {
                 showError("ERROR while verifying password, aborted");
@@ -43,12 +43,11 @@ class NFCHandler {
         }
 
         var oldNoteBytes = ByteArray(0)
-        for (i in 10..20 step 4){
-            val response = getPageBytes(nfcA,i)
-            if (response!= null){
+        for (i in 10..20 step 4) {
+            val response = getPageBytes(nfcA, i)
+            if (response != null) {
                 oldNoteBytes += response
-            }
-            else
+            } else
                 break
         }
         val oldNote = oldNoteBytes.sliceArray((0..35)).toString(Charsets.UTF_8)
@@ -83,15 +82,16 @@ class NFCHandler {
         showLog(IOData_NFC(oldNote, newNote, serialNumber).toString())
         return IOData_NFC(oldNote, newNote, serialNumber)
     }
-    fun readNote(intent: Intent){
+
+    fun readNote(intent: Intent) {
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
         val needAuth = false
         var result = ByteArray(0)
         nfcA.connect()
-        if (needAuth){
-            val passwordBytes = byteArrayOf(0x31,0x32,0x33,0x34)    // 1234
-            val packBytes = byteArrayOf(0x4F,0x4B)                  // OK
+        if (needAuth) {
+            val passwordBytes = byteArrayOf(0x31, 0x32, 0x33, 0x34)    // 1234
+            val packBytes = byteArrayOf(0x4F, 0x4B)                  // OK
             var response = sendPwdAuthData(nfcA, passwordBytes)
             if (response == null) {
                 showError("ERROR while verifying password, aborted");
@@ -108,12 +108,11 @@ class NFCHandler {
             }
         }
 
-        for (i in 10..20 step 4){
-            val response = getPageBytes(nfcA,i)
-            if (response!= null){
+        for (i in 10..20 step 4) {
+            val response = getPageBytes(nfcA, i)
+            if (response != null) {
                 result += response
-            }
-            else
+            } else
                 break
         }
         result = result.sliceArray((0..35))
@@ -121,15 +120,16 @@ class NFCHandler {
         showLog(result.toString(Charsets.UTF_8))
         nfcA.close()
     }
-    fun writeNote(intent:Intent){
+
+    fun writeNote(intent: Intent) {
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
         val needAuth = false
         var response = ByteArray(0)
         nfcA.connect()
-        if (needAuth){
-            val passwordBytes = byteArrayOf(0x31,0x32,0x33,0x34)    // 1234
-            val packBytes = byteArrayOf(0x4F,0x4B)                  // OK
+        if (needAuth) {
+            val passwordBytes = byteArrayOf(0x31, 0x32, 0x33, 0x34)    // 1234
+            val packBytes = byteArrayOf(0x4F, 0x4B)                  // OK
             var response = sendPwdAuthData(nfcA, passwordBytes)
             if (response == null) {
                 showError("ERROR while verifying password, aborted");
@@ -145,7 +145,7 @@ class NFCHandler {
                 return
             }
         }
-        try{
+        try {
             val newNote = UUID.randomUUID().toString()
             showLog("New note: $newNote")
             val dataByte = newNote.toByteArray(Charsets.UTF_8)
@@ -226,16 +226,17 @@ class NFCHandler {
             nfcA.close()
             showLog("write result: SUCCESS")
             return
-        }catch (e:Exception){
+        } catch (e: Exception) {
             showError(e.stackTraceToString())
         }
 
     }
-    fun setWriteProtection(intent: Intent){
+
+    fun setWriteProtection(intent: Intent) {
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
-        val passwordBytes = byteArrayOf(0x31,0x32,0x33,0x34)    // 1234
-        val packBytes = byteArrayOf(0x4F,0x4B,0x00,0x00)                  // OK
+        val passwordBytes = byteArrayOf(0x31, 0x32, 0x33, 0x34)    // 1234
+        val packBytes = byteArrayOf(0x4F, 0x4B, 0x00, 0x00)                  // OK
         val startProtectionPage = 4
         nfcA.connect()
         showLog("Запись PWD")
@@ -274,9 +275,11 @@ class NFCHandler {
         var accessByte = configurationPage1[0]
         val abOld = ByteArray(1)
         abOld[0] = accessByte
-        showLog("Configuration page 1 old: " +
-                bytesToHex(configurationPage1) + " ACCESS byte: " + printByteArrayBinary(
-            abOld)
+        showLog(
+            "Configuration page 1 old: " +
+                    bytesToHex(configurationPage1) + " ACCESS byte: " + printByteArrayBinary(
+                abOld
+            )
         )
         val readProtectionChecked = false;
 
@@ -292,7 +295,11 @@ class NFCHandler {
         configurationPage1[0] = accessByte
         val ab = ByteArray(1)
         ab[0] = accessByte
-        showLog("Configuration page 1 new: " + bytesToHex(configurationPage1) + " ACCESS byte: " + printByteArrayBinary(ab))
+        showLog(
+            "Configuration page 1 new: " + bytesToHex(configurationPage1) + " ACCESS byte: " + printByteArrayBinary(
+                ab
+            )
+        )
         responseSuccessful = writeTagData(nfcA, 228, configurationPage1)
         if (!responseSuccessful) showError("Не удалось установить защиту паролем!");
         showLog("NFC tag is password protected now");
@@ -302,8 +309,8 @@ class NFCHandler {
     fun removeWriteProtection(intent: Intent) {
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
-        val passwordBytes = byteArrayOf(0x31,0x32,0x33,0x34)    // 1234
-        val packBytes = byteArrayOf(0x4F,0x4B)                   // OK
+        val passwordBytes = byteArrayOf(0x31, 0x32, 0x33, 0x34)    // 1234
+        val packBytes = byteArrayOf(0x4F, 0x4B)                   // OK
         nfcA.connect()
         val response = sendPwdAuthData(nfcA, passwordBytes)
         if (response == null) {
@@ -348,7 +355,7 @@ class NFCHandler {
         val startProtectionPage = 255 // СТАНДАРТНОЕ ЗНАЧЕНИЕ
         val configurationPage1 = ByteArray(4)
         System.arraycopy(configurationPages, 0, configurationPage1, 0, 4)
-        showLog("configuration page old: " + bytesToHex(configurationPage1) )
+        showLog("configuration page old: " + bytesToHex(configurationPage1))
         configurationPage1[3] = (startProtectionPage and 0x0ff).toByte()
         showLog("configuration page new: " + bytesToHex(configurationPage1))
         responseSuccessful = writeTagData(nfcA, 227, configurationPage1)
@@ -357,7 +364,7 @@ class NFCHandler {
         nfcA.close()
     }
 
-    fun fixTag(intent:Intent){
+    fun fixTag(intent: Intent) {
         val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
         val passwordByteDefault = byteArrayOf(
@@ -389,7 +396,7 @@ class NFCHandler {
         val startProtectionPage = 255 // СТАНДАРТНОЕ ЗНАЧЕНИЕ
         val configurationPage1 = ByteArray(4)
         System.arraycopy(configurationPages, 0, configurationPage1, 0, 4)
-        showLog("configuration page old: " + bytesToHex(configurationPage1) )
+        showLog("configuration page old: " + bytesToHex(configurationPage1))
         configurationPage1[3] = (startProtectionPage and 0x0ff).toByte()
         showLog("configuration page new: " + bytesToHex(configurationPage1))
         responseSuccessful = writeTagData(nfcA, 227, configurationPage1)
@@ -399,11 +406,11 @@ class NFCHandler {
 
     }
 
-    fun testPassword(checkIntent: Intent){
+    fun testPassword(checkIntent: Intent) {
         val tag = checkIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
         val nfcA: NfcA = NfcA.get(tag)
-        val passwordBytes = byteArrayOf(0x31,0x32,0x33,0x34)    // 1234
-        val packBytes = byteArrayOf(0x4F,0x4B,0x00,0x00)                  // OK
+        val passwordBytes = byteArrayOf(0x31, 0x32, 0x33, 0x34)    // 1234
+        val packBytes = byteArrayOf(0x4F, 0x4B, 0x00, 0x00)                  // OK
 
         nfcA.connect()
         showLog("Start auth")
@@ -462,12 +469,11 @@ class NFCHandler {
                     NdefRecord.createTextRecord("ru", newNote)
                 )
             )
-            try{
+            try {
                 ndef.connect()
                 ndef.writeNdefMessage(message)
                 ndef.close()
-            }
-            catch (e: IOException){
+            } catch (e: IOException) {
                 showError(e.stackTraceToString())
                 showError(e.message.toString())
             }
@@ -479,7 +485,8 @@ class NFCHandler {
     }
 
     private fun writeTagData(
-        nfcA: NfcA, page: Int, dataByte: ByteArray): Boolean {
+        nfcA: NfcA, page: Int, dataByte: ByteArray
+    ): Boolean {
         val response: ByteArray?
         val result: Boolean
         val command = byteArrayOf(
@@ -515,8 +522,7 @@ class NFCHandler {
             showLog("IOException: $e")
             e.printStackTrace()
             return false
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             showLog("Exception: $e")
             e.printStackTrace()
             return false
@@ -557,8 +563,8 @@ class NFCHandler {
 
     private fun getPageBytes(
         nfcA: NfcA,
-        page:Int
-    ):ByteArray?{
+        page: Int
+    ): ByteArray? {
         val response: ByteArray?
         val command = byteArrayOf(0x30.toByte(), (page and 0x0ff).toByte())
         try {
@@ -614,8 +620,7 @@ class NFCHandler {
             showLog("IOException: $e")
             e.printStackTrace()
             return null
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             showLog("IOException: $e")
             e.printStackTrace()
             return null
@@ -623,7 +628,7 @@ class NFCHandler {
         return response
     }
 
-    private fun bytesToHex(bytes:ByteArray):String{
+    private fun bytesToHex(bytes: ByteArray): String {
         return bytes.joinToString("") { "%02x".format(it) }?.uppercase().toString()
     }
 

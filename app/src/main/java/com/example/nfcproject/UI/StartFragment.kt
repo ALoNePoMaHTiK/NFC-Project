@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.nfcproject.R
 import com.example.nfcproject.Handlers.StudentDataStorage
-import com.example.nfcproject.Handlers.UserDataStorage
 import com.example.nfcproject.databinding.FragmentStartBinding
 import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.MainViewModel
