@@ -1,6 +1,7 @@
 package com.example.nfcproject.Services
 import com.example.nfcproject.model.APIModels.DBAPI.AuthData
 import com.example.nfcproject.model.APIModels.DBAPI.Checkout
+import com.example.nfcproject.model.APIModels.DBAPI.Lesson
 import com.example.nfcproject.model.APIModels.DBAPI.Student
 import com.example.nfcproject.model.APIModels.DBAPI.Tag
 import com.example.nfcproject.model.APIModels.DBAPI.User
@@ -60,4 +61,11 @@ interface DBAPI {
     @Headers(API_KEY)
     @GET("Users/{userId}")
     suspend fun GetUserById(@Path (value = "userId", encoded = false) userId: Int): Response<User>
+
+    //@Headers(API_KEY)
+    @GET("Lessons/ByDateTime/{groupId}/{datetime}")
+    suspend fun GetLesson(@Path (value = "groupId", encoded = false) groupId: String,@Path (value = "datetime", encoded = false) datetime: String): Response<Lesson>
+
+    @GET("Lessons/ByDateTime/{groupId}/{datetime}")
+    fun GetLessonSync(@Path (value = "groupId", encoded = false) groupId: String,@Path (value = "datetime", encoded = false) datetime: String): Call<Lesson>
 }

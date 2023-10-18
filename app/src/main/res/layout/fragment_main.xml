@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="com.example.nfcproject.model.MainViewModel" />
+            name="sViewModel"
+            type="com.example.nfcproject.model.StudentViewModel" />
         <variable
             name="jViewModel"
             type="com.example.nfcproject.model.JournalViewModel" />
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:textColor="@color/TextColor"
-                android:text=""
+                android:text="@{jViewModel.lessonName}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:textColor="@color/TextColor"
-                android:text=""
+                android:text="@{jViewModel.getStartTime()}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:textColor="@color/TextColor"
-                android:text=""
+                android:text="@{jViewModel.finishDateTime}"
                 android:textStyle="bold"
                 android:textSize="20sp" />
 

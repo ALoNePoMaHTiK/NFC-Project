@@ -75,7 +75,6 @@ class StartFragment : Fragment() {
             goToSignInFragment()
     }
 
-    //TODO использовать worker для последовательных запросов
     private fun checkAuth() : Boolean{
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         var result = false

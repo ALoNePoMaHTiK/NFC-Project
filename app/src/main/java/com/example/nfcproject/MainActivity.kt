@@ -1,7 +1,6 @@
 package com.example.nfcproject
 import com.example.nfcproject.Handlers.RetrofitHelper
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,16 +17,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.nfcproject.Handlers.NFCHandler
 import com.example.nfcproject.databinding.ActivityMainBinding
 import com.example.nfcproject.model.APIModels.DBAPI.Checkout
-import com.example.nfcproject.model.APIModels.DBAPI.Lesson
 import com.example.nfcproject.model.APIModels.DBAPI.Tag
-import com.example.nfcproject.model.APIModels.VisitingAPI.Visiting
 import com.example.nfcproject.model.JournalViewModel
 import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
 import com.example.nfcproject.Services.DBAPI
-import com.example.nfcproject.Services.VisitingAPI
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -77,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         studentViewModel.userSecondName.observe(this) {
             HeaderLNameTextView.text = it.toString()
         }
-        Auth()
     }
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -93,31 +86,6 @@ class MainActivity : AppCompatActivity() {
          if (intent != null && sharedViewModel.stateNFC.value == true && (intent.action == NfcAdapter.ACTION_NDEF_DISCOVERED || intent.action == NfcAdapter.ACTION_TAG_DISCOVERED)) {
             readNFC(intent)
         }
-    }
-
-    private fun Auth(){
-        val api = Retrofit.Builder().baseUrl("https://rtu-attends.rtu-tc.ru")
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build().create(VisitingAPI::class.java)
-        api.Auth().enqueue(object : Callback<Void> {
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    showLog("Проблема с подключением к API")
-                    showLog("Запрос : " + call.request())
-                }
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        showLog("Success")
-                        showLog(response.headers()["set-cookie"].toString())
-                        journalViewModel.setCookie(response.headers()["set-cookie"].toString())
-                    }
-                    else{
-                        showLog("Код ответа : " + response?.code().toString())
-                        showLog("Код ответа : " + response.raw())
-                        showLog("Код ответа : " + response.headers().toString())
-                    }
-                }
-            })
     }
 
     fun readNFC(intent: Intent){
@@ -207,8 +175,6 @@ class MainActivity : AppCompatActivity() {
             }.join()
         }
     }
-
-    private fun showMessage(message: String) = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
     private fun showError(msg: String) = Log.e("NFCProjectTestDebug", msg)
 }
