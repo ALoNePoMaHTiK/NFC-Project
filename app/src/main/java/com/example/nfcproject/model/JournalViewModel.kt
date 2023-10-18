@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModel
 
 class JournalViewModel: ViewModel() {
 
-    private val _cookie  = MutableLiveData<String>()
-    val cookie: LiveData<String> = _cookie
+    private val _titleLessons = MutableLiveData<String>()
+    val titleLesons: LiveData<String> = _titleLessons
 
-    fun setCookie(cookie:String){
-        _cookie.value = cookie
-    }
+    private val _timeStartLessons = MutableLiveData<String>()
+    val timeStartLessons: LiveData<String> = _timeStartLessons
+
+    private val _timeEndLessons = MutableLiveData<String>()
+    val timeEndLessons: LiveData<String> = _timeEndLessons
+
 }
