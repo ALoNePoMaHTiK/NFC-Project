@@ -27,12 +27,4 @@ class JournalViewModel: ViewModel() {
         _StartDateTime.value = ""
         _FinishDateTime.value = ""
     }
-
-    fun getStartTime() : String{
-        if (_StartDateTime.value != null && _StartDateTime.value != "")
-            return SimpleDateFormat("HH:mm").format(_StartDateTime.value)
-        else
-            return ""
-    }
-
 }

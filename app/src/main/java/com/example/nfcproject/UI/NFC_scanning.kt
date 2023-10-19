@@ -48,6 +48,16 @@ class NFC_scanning : Fragment() {
         //test()
     }
 
+    override fun onResume() {
+        super.onResume()
+        try{
+            getCurrentLesson()
+        }
+        catch (e: Exception){
+            showLog("бебебе")
+            showLog(e.stackTraceToString())
+        }
+    }
     private fun getCurrentLesson(){
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
         runBlocking {
@@ -57,8 +67,9 @@ class NFC_scanning : Fragment() {
                 {
                     journalViewModel.set(
                         response.body()?.lessonName.toString(),
-                        response.body()?.startDateTime.toString(),
-                        response.body()?.finishDateTime.toString())
+                        response.body()?.startDateTime.toString().split('T')[1],
+                        response.body()?.finishDateTime.toString().split('T')[1]
+                    )
                 }
                 else{
                     journalViewModel.reset()
@@ -66,28 +77,5 @@ class NFC_scanning : Fragment() {
             }.join()
         }
     }
-
-    private fun test(){
-        val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
-        showLog("Запрос")
-        api.GetLessonSync(studentViewModel.groupId.value.toString(),SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date()))
-            .enqueue(object : Callback<Lesson> {
-                override fun onFailure(call: Call<Lesson>, t: Throwable) {
-                    showLog("Проблема с подключением к API")
-                    showLog(call.request().toString())
-                }
-                override fun onResponse(call: Call<Lesson>, response: Response<Lesson>) {
-                    showLog(response.body().toString())
-                    if (response.isSuccessful)
-                        journalViewModel.set(
-                            response.body()?.lessonName.toString(),
-                            response.body()?.startDateTime.toString(),
-                            response.body()?.finishDateTime.toString())
-                    if (response.code() == 204)
-                        journalViewModel.reset()
-                }
-            })
-    }
-
     private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
 }
