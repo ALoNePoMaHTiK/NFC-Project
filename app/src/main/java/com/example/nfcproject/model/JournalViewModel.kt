@@ -15,16 +15,20 @@ class JournalViewModel: ViewModel() {
 
     private val _FinishDateTime = MutableLiveData<String>()
     val FinishDateTime: LiveData<String> = _FinishDateTime
+    private val _RoomId = MutableLiveData<Short>()
+    val RoomId: LiveData<Short> = _RoomId
 
-    fun set(LessonName:String,StartDateTime:String,FinishDateTime:String){
+    fun set(LessonName:String, StartDateTime:String, FinishDateTime:String, RoomId: Short ){
         _LessonName.value = LessonName
         _StartDateTime.value = StartDateTime
         _FinishDateTime.value = FinishDateTime
+        _RoomId.value = RoomId
     }
 
     fun reset(){
         _LessonName.value = "Нет пар"
         _StartDateTime.value = "--:--"
         _FinishDateTime.value = "--:--"
+        _RoomId.value = 0
     }
 }

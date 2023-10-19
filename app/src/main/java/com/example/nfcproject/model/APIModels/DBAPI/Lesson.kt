@@ -6,7 +6,7 @@ data class Lesson(
     val lessonId:String,
     val lessonName: String,
     val groupId:String,
-    val roomId:Int,
+    val roomId:Short,
     val startDateTime:String,
     val finishDateTime:String) {
     constructor() : this("", "", "", 0,"","")

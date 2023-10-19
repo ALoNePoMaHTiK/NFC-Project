@@ -55,7 +55,9 @@ class NFC_scanning : Fragment() {
                     journalViewModel.set(
                         response.body()?.lessonName.toString(),
                         startDateTimeFull[0] + ":" + startDateTimeFull[1],
-                        finishDateTimeFull[0] + ":" + finishDateTimeFull[1]
+                        finishDateTimeFull[0] + ":" + finishDateTimeFull[1],
+                        response.body()?.roomId!!.toShort()
+
                     )
                 }
                 else
