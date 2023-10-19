@@ -24,7 +24,7 @@ class JournalViewModel: ViewModel() {
 
     fun reset(){
         _LessonName.value = "Нет пар"
-        _StartDateTime.value = ""
-        _FinishDateTime.value = ""
+        _StartDateTime.value = "--:--"
+        _FinishDateTime.value = "--:--"
     }
 }

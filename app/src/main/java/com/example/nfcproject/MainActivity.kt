@@ -177,4 +177,6 @@ class MainActivity : AppCompatActivity() {
     }
     private fun showLog(msg: String) = Log.d("NFCProjectTestDebug", msg)
     private fun showError(msg: String) = Log.e("NFCProjectTestDebug", msg)
+
+    private fun showMessage(message: String) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }

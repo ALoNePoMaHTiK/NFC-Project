@@ -104,7 +104,7 @@
                     android:id="@+id/permission_text_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/role">
+                    >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/Permissions"
@@ -112,6 +112,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:enabled="false"
+                        android:text="Студент"
                         android:textColor="@color/TextColor"
                         android:background="@drawable/textviewshape"
                         android:maxLines="1" />

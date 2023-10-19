@@ -10,17 +10,10 @@ import androidx.fragment.app.activityViewModels
 import com.example.nfcproject.Handlers.RetrofitHelper
 import com.example.nfcproject.Services.DBAPI
 import com.example.nfcproject.databinding.FragmentMainBinding
-import com.example.nfcproject.model.APIModels.DBAPI.AuthData
-import com.example.nfcproject.model.APIModels.DBAPI.Lesson
 import com.example.nfcproject.model.JournalViewModel
-import com.example.nfcproject.model.MainViewModel
 import com.example.nfcproject.model.StudentViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -44,19 +37,11 @@ class NFC_scanning : Fragment() {
             sViewModel = studentViewModel
             jViewModel = journalViewModel
         }
-        showLog("Created")
-        //test()
     }
 
     override fun onResume() {
         super.onResume()
-        try{
-            getCurrentLesson()
-        }
-        catch (e: Exception){
-            showLog("бебебе")
-            showLog(e.stackTraceToString())
-        }
+        getCurrentLesson()
     }
     private fun getCurrentLesson(){
         val api = RetrofitHelper().getInstance().create(DBAPI::class.java)
@@ -65,15 +50,16 @@ class NFC_scanning : Fragment() {
                 val response = api.GetLesson(studentViewModel.groupId.value.toString(),SimpleDateFormat("yyyy-MM-dd HH:mm").format(Date()))
                 if (response.body() != null)
                 {
+                    var startDateTimeFull = response.body()?.startDateTime.toString().split('T')[1].split(':')
+                    var finishDateTimeFull = response.body()?.finishDateTime.toString().split('T')[1].split(':')
                     journalViewModel.set(
                         response.body()?.lessonName.toString(),
-                        response.body()?.startDateTime.toString().split('T')[1],
-                        response.body()?.finishDateTime.toString().split('T')[1]
+                        startDateTimeFull[0] + ":" + startDateTimeFull[1],
+                        finishDateTimeFull[0] + ":" + finishDateTimeFull[1]
                     )
                 }
-                else{
+                else
                     journalViewModel.reset()
-                }
             }.join()
         }
     }

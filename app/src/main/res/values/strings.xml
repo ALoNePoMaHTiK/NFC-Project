@@ -17,9 +17,9 @@
     <string name="hint_name">Имя</string>
     <string name="hint_surname">Фамилия</string>
     <string name="hint_studnum">№ студенческого билета</string>
-    <string name="start_time">Начало: </string>
-    <string name="end_time">Окончание: </string>
-    <string name="subject">Дисциплина: </string>
+    <string name="start_time">Начало:</string>
+    <string name="end_time">Окончание:</string>
+    <string name="subject">Дисциплина:</string>
     <string name="label_SingUp">РЕГИСТРАЦИЯ</string>
     <string name="hint_email">Email</string>
     <string name="hint_studentID">Номер студенчиского</string>
